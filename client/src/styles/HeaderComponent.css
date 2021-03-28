@@ -1,0 +1,12 @@
+.navbar-dark{
+    background-color: #171E45;
+  }
+  
+NavbarBrand{
+  float: left;
+  margin-left: 10px;
+}
+
+NavbarToggler{
+  float: right;
+}
