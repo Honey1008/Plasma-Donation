@@ -2,6 +2,29 @@
     background-color: #171E45;
   }
   
+.modal-header{
+  background-color: #171E45;
+  color: white;
+}
+
+.close {
+  color: #fff; 
+  opacity: 1;
+}
+
+.close:hover{
+  color:white;
+  box-shadow: black;
+}
+
+.login-button{
+  background-color: #171E45;
+}
+
+.login-button:hover{
+ background-color: #2e3661;
+}
+
 NavbarBrand{
   float: left;
   margin-left: 10px;

@@ -28,7 +28,7 @@ function Footer(props) {
                             </ul>
                         </div>  
                         <div className="col-5 col-sm-4 ml-auto">
-                            <h5 className="heading-footer">ADDRESS</h5>
+                            <h5 className="heading-footer" >ADDRESS</h5>
                             <address>
                               50- Tulsi Tenament, <br />
                               Near ITI, Jafarabad<br />
@@ -44,6 +44,7 @@ function Footer(props) {
                              </div>   
                         </div> 
                     </div>
+                    
                 </div>
     );
 }

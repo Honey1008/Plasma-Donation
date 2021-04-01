@@ -22,20 +22,17 @@ const SeekerPool = (props) => {
 
     const seekerlist = props.seekers.map(seeker => {
         return(
-            <div key={seeker.id} className="col-12 col-md-auto offset-md-1 m-3">
+            <div key={seeker.id} className="col-12 col-md-auto offset-md-1 m-4">
                 <CardDeck>
                     <RenderSeeker seeker = {seeker} onClick={props.onClick} /> 
                 </CardDeck>
-               </div>
+            </div>
         );
     });
 
     return(
         <div className="container">
             <h1></h1>
-            <div className="row col-12 col-md-auto m-3">
-                <ButtonToggle color="primary" size="lg" > + ADD </ButtonToggle>
-            </div>
             <div className="row">
                 {seekerlist}
             </div>

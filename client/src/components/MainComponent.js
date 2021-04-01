@@ -7,11 +7,18 @@ import Footer from './FooterComponent';
 import FollowUs from './FollowComponent';
 import SeekerPool from './SeekerPoolComponent';
 import HospitalPool from './HospitalPoolComponent';
+import DonorPool from './DonorPoolComponent';
+import HospitalForm from './HospitalFormComponent';
+import SeekerForm from './SeekerFormComponent';
+import DonorForm from './DonorFormComponent';
 import SeekerProfile from './ProfileComponent';
 import Contact from './ContactComponent';
+import SignedIn from './auth/SignInComponent';
+import Dashboard from './dashboard/DashBoardComponent';
 import { HOSPITALS } from '../shared/hospitals';
 import { SEEKERS } from '../shared/seekers';
 import { Switch, Route, Redirect } from 'react-router-dom';
+
 
 class Main extends Component {
 
@@ -84,13 +91,22 @@ class Main extends Component {
     return (
       <div>
       <Header />
+      
       <Switch>
         <Route path="/home" component={HomePage} />
-        <Route exact path="/hospitals" component={()=> <HospitalPool hospitals={this.state.hospitals} /> } />
+        <Route path="/hospitals" component={()=> <HospitalPool hospitals={this.state.hospitals} /> } />
         <Route exact path="/seekers" component={() => <SeekerPool seekers={this.state.seekers}/> } />
+        <Route path ="/donors" component={DonorPool} />
         <Route path="/contactus" component={Contact} />
+        <Route path ="/hospitalform" component={HospitalForm} />
+        <Route path="/seekerform" component={SeekerForm} />
+        <Route path="/donorform" component={DonorForm} />
+        <Route path ="/signin" component={SignedIn} />
+        <Route path="/aboutus" component={Dashboard} />
         <Redirect to="/home" />
       </Switch>
+     
+      
       <Footer />
       <FollowUs/>
       </div>

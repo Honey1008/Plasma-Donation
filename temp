@@ -1,0 +1,63 @@
+valid = {errors.hospitalname === ''}
+                            invalid = {errors.hospitalname !== ''}
+                            onBlur={this.handleBlur('hospitalname')}
+                             <FormFeedback>
+                                {errors.hospitalname}
+                            </FormFeedback>
+
+
+handleBlur = (field) => (evt) => {
+        this.setState({
+            touched: {...this.state.touched,[field]: true}
+        });
+    }
+
+ message: '',
+            touched : {
+            hospitalname: false,
+            hospitalemail: false,
+            hospitalnum: false,
+            hospitaladdress: false,
+            hospitalcity: false,
+            hospitalstate: false
+
+    validate(){
+        const errors = {
+            hospitalname: '',
+            hospitalemail: '',
+            hospitalnum: '',
+            hospitaladdress: '',
+            hospitalcity: '',
+            hospitalstate: ''
+        };
+
+        if(this.state.touched.hospitalname && this.hospitalname.value.length<3)
+            errors.hospitalname = " Name of the Hospital should be greater than or equal to 3 characters."
+        else if(this.state.touched.hospitalname && this.hospitalname.value.length > 30)
+            errors.hospitalname = "Hospital Name has exceeded the limit it should be less than or equal to 30 characters."
+        
+            
+        const regemail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
+        if(this.state.touched.hospitalemail && !regemail.test(this.hospitalemail.value))
+            errors.hospitalemail = 'Enter a valid email address.'
+        
+        const reg = /^\d+$/;
+        if(this.state.touched.hospitalnum && !reg.test(this.hospitalnum.value))
+            errors.hospitalnum = "Phone number should contain only numbers."
+       
+        
+        if(this.state.touched.hospitaladdress && this.hospitaladdress.value.length < 5)
+            errors.hospitaladdress = "Address should be greater than 5 characters."
+        
+        
+        if(this.state.touched.hospitalcity && this.hospitalcity.value.length < 3)
+            errors.hospitalcity = "City should be greater than 2 characters."
+        
+        
+        if(this.state.touched.hospitalstate && this.hospitalstate.value.length < 3)
+            errors.hospitalstate = "State should be greater than 2 characters."
+        
+        return errors;
+    }
+
+    const errors = this.validate();

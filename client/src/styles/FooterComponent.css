@@ -1,9 +1,8 @@
 .footer{
-    /* background-color: #FFBDDD; */
-    /* display: flex; */
-    margin:0px auto;
-    padding: 20px 0px 20px 0px;
+    margin : auto;
+    padding: 40px 0px 10px 0px;
 }
+
 
 .footer-line{
     background-color: #171E45;
@@ -15,10 +14,20 @@
    color: #171E45;
 }  
 
+.link-content:hover{
+    text-decoration:none;
+    color: #171E45;
+    font-weight: bold;
+}
+
+.heading-footer{
+    font-weight: bolder;
+}
+
 
 address{
     font-size:80%;
     margin:0px;
     color:#0f0f0f;
-  }
+}
   
