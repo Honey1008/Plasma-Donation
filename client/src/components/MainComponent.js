@@ -13,11 +13,11 @@ import SeekerForm from './SeekerFormComponent';
 import DonorForm from './DonorFormComponent';
 import SeekerProfile from './ProfileComponent';
 import Contact from './ContactComponent';
-import SignedIn from './auth/SignInComponent';
 import Dashboard from './dashboard/DashBoardComponent';
 import { HOSPITALS } from '../shared/hospitals';
 import { SEEKERS } from '../shared/seekers';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import LoginPage from './auth/LoginPageComponent';
 
 
 class Main extends Component {
@@ -90,8 +90,7 @@ class Main extends Component {
     }
     return (
       <div>
-      <Header />
-      
+      <Header />      
       <Switch>
         <Route path="/home" component={HomePage} />
         <Route path="/hospitals" component={()=> <HospitalPool hospitals={this.state.hospitals} /> } />
@@ -101,12 +100,10 @@ class Main extends Component {
         <Route path ="/hospitalform" component={HospitalForm} />
         <Route path="/seekerform" component={SeekerForm} />
         <Route path="/donorform" component={DonorForm} />
-        <Route path ="/signin" component={SignedIn} />
+        <Route path ="/login" component={LoginPage} />
         <Route path="/aboutus" component={Dashboard} />
         <Redirect to="/home" />
-      </Switch>
-     
-      
+      </Switch>  
       <Footer />
       <FollowUs/>
       </div>

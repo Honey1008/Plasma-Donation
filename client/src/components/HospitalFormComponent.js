@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../styles/FormComponent.css';
-import { Button, Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
 
 class HospitalForm extends Component {
     constructor(props){
