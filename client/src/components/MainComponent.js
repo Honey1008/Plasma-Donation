@@ -80,7 +80,7 @@ class Main extends Component {
         
         <div> 
           <Home />
-          The Manager of the contract is {this.state.plasmaManager}.
+          <p>The Manager of the contract is {this.state.plasmaManager}.</p>
         </div>
       );
     }

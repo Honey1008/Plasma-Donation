@@ -1,6 +1,7 @@
 import React from 'react';
 import {Jumbotron} from 'reactstrap';
 import '../styles/HomeComponent.css';
+import Circle from './CircleComponent';
 
 function Home(props) {
     return(
@@ -17,6 +18,7 @@ function Home(props) {
                 </div>
             </Jumbotron>
             <h1>Home</h1>
+            <Circle bgColor='#171E45' />
            </>  
     );
 }

@@ -30,7 +30,7 @@ class Header extends Component{
                     </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNav}/>
                     <Collapse isOpen={this.state.isNavOpen} navbar  style={{float: 'left', marginLeft: '40px'}}>
-                            <SignIn />
+                            {/* <SignIn /> */}
                             <SignOut />
                      </Collapse>
             </Navbar>
