@@ -14,10 +14,16 @@ import DonorForm from './auth/DonorFormComponent';
 import SeekerProfile from './pools/ProfileComponent';
 import Contact from './ContactComponent';
 import Dashboard from './dashboard/DashBoardComponent';
-import { HOSPITALS } from '../shared/hospitals';
-import { SEEKERS } from '../shared/seekers';
-import { Switch, Route, Redirect } from 'react-router-dom';
 import LoginPage from './auth/LoginPageComponent';
+import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+
+const mapStatetoProps = state => {
+  return {
+    seekers : state.seekers,
+    hospitals : state.hospitals
+  }
+}
 
 
 class Main extends Component {
@@ -27,8 +33,6 @@ class Main extends Component {
     web3: null, 
     plasmaManager: null, 
     isManager: false,
-    hospitals : HOSPITALS,
-    seekers : SEEKERS,
     totalSeekers : 1,
     totalDonors : '',
     totalHospitals : '',
@@ -85,7 +89,7 @@ class Main extends Component {
   render(){
    const SeekerWithId = ({match}) => {
      return(
-       <SeekerProfile seeker={this.state.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
+       <SeekerProfile seeker={this.props.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
       );
 
    }
@@ -104,8 +108,8 @@ class Main extends Component {
                         totalDonors = {this.state.totalDonors}
                         totalHospitals = {this.state.totalHospitals} />} />
 
-        <Route path="/hospitals" component={()=> <HospitalPool hospitals={this.state.hospitals} /> } />
-        <Route exact path="/seekers" component={() => <SeekerPool seekers={this.state.seekers}/> } />
+        <Route path="/hospitals" component={()=> <HospitalPool hospitals={this.props.hospitals} /> } />
+        <Route exact path="/seekers" component={() => <SeekerPool seekers={this.props.seekers}/> } />
         <Route path="/seekers/:seekerId" component={SeekerWithId} />
         <Route path ="/donors" component={DonorPool} />
         <Route path="/contactus" component={Contact} />
@@ -124,4 +128,4 @@ class Main extends Component {
   
 }
 
-export default Main;
+export default withRouter(connect(mapStatetoProps)(Main));
