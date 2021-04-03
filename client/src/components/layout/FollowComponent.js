@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/FollowComponent.css';
+import '../../styles/FollowComponent.css';
 
 function FollowUs(props){
     return(

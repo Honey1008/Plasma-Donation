@@ -1,7 +1,7 @@
-export const SEEKERS = [
+export const DONORS = [
     {
         id: 0,
-        img : '../../../assets/images/profile.jpg',
+        img : 'assets/images/profile.jpg',
         name : "Patient 1",
         ethseeker : "0x675657567463452451",
         seekerBG : "A+",
@@ -12,7 +12,7 @@ export const SEEKERS = [
     },
     {
         id: 1,
-        img : "../../../assets/images/profile.jpg",
+        img : "assets/images/profile.jpg",
         name : "Patient 2",
         ethseeker : "0x675657567463434323",
         seekerBG : "B+",
@@ -23,7 +23,7 @@ export const SEEKERS = [
     },
     {
         id: 2,
-        img : "../../../assets/images/profile.jpg",
+        img : "assets/images/profile.jpg",
         name : "Patient 3",
         ethseeker : "0x6756575674634522326",
         seekerBG : "O-",
@@ -34,7 +34,7 @@ export const SEEKERS = [
     },
     {
         id: 3,
-        img : "../../../assets/images/profile.jpg",
+        img : "assets/images/profile.jpg",
         name : "Patient 3",
         ethseeker : "0x6756575674634522326",
         seekerBG : "O-",
@@ -45,7 +45,7 @@ export const SEEKERS = [
     },
     {
         id: 4,
-        img : "../../../assets/images/profile.jpg",
+        img : "assets/images/profile.jpg",
         name : "Patient 3",
         ethseeker : "0x6756575674634522326",
         seekerBG : "O-",

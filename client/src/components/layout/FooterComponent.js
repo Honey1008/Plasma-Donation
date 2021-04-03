@@ -1,11 +1,10 @@
 import React from 'react';
-import '../styles/FooterComponent.css';
+import '../../styles/FooterComponent.css';
 import { Link } from 'react-router-dom';
 
 
 function Footer(props) {
-    return(
-    
+    return(    
             <div className="footer">
                 <hr className="footer-line"/>
                 <div className="container">

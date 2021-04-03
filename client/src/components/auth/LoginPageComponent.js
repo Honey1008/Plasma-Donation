@@ -3,7 +3,18 @@ import { Form, FormGroup,Label,Col,Input,Button } from "reactstrap";
 
 class LoginPage extends Component {
     state = {
+        email : '',
+        password : ''
+    }
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
 
+    handleLogin = (e) => {
+        e.preventDefault();
+        console.log(this.state);
     }
 
     render() {
@@ -15,10 +26,11 @@ class LoginPage extends Component {
                 <div className="form-body">
                 <Form onSubmit={this.handleLogin}>
                         <FormGroup row>
-                            <Label htmlFor="username" md={{size: 2, offset: 1}}>Username</Label>
+                            <Label htmlFor="email" md={{size: 2, offset: 1}}>Email</Label>
                             <Col md={8}>
-                                <Input type="text" id="username" name="username" 
-                                innerRef={(input) => this.username = input } style={{boxSizing:'border-box', padding:'0 0 0 50px'}} />
+                                <Input type="text" id="email" name="email" 
+                                 onChange ={this.handleChange} 
+                                style={{boxSizing:'border-box', padding:'0 0 0 50px'}} />
                                 <i className="fa fa-user fa-lg" style={{position: 'absolute',left: '25px', top: '10px', color: 'gray'}}></i>
                             </Col>   
                         </FormGroup>
@@ -26,14 +38,14 @@ class LoginPage extends Component {
                             <Label htmlFor="password" md={{size: 2, offset: 1}}>Password</Label>
                             <Col md={8}>
                             <Input type="password" id="password" name="password" 
-                            innerRef={(input) => this.password = input} style={{boxSizing:'border-box', padding:'0 0 0 50px'}}/>
+                            onChange={this.handleChange}
+                            style={{boxSizing:'border-box', padding:'0 0 0 50px'}}/>
                             <i className="fa fa-key fa-lg" style={{position: 'absolute',left: '25px', top: '10px', color: 'gray'}}></i>
                             </Col>    
                         </FormGroup>
                         <FormGroup check row>
                             <Label check md={{size: 4, offset: 3}}>
-                            <Input type="checkbox" name="remember" 
-                            innerRef={(input) => this.remember = input}/>
+                            <Input type="checkbox" name="remember" />
                             Remember me
                             </Label>
                         </FormGroup>

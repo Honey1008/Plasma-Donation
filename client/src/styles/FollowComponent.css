@@ -1,8 +1,13 @@
-.follow-us{
-   background-color: #AFBAE4;
-   margin : auto;
-   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
- }
+.follow-us {
+	background-color: #afbae4;
+	margin: auto;
+	margin-bottom: 0%;
+	font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+html {
+	min-height: 100%;
+}
 
-
- 
+body {
+	min-height: 100%;
+}

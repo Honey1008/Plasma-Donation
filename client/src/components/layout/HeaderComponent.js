@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import '../styles/HeaderComponent.css';
-import SignOut from './auth/SignOutComponent';
-import SignIn from './auth/SignInComponent';
+import '../../styles/HeaderComponent.css';
 import { Navbar, NavbarBrand, NavbarToggler, Collapse} from 'reactstrap';
+import SignInLinks from './SignInLinksComponent';
+import SignOutLinks from './SignOutLinksComponent';
 
 
 class Header extends Component{
@@ -25,13 +25,13 @@ class Header extends Component{
         return( 
             <Navbar dark expand="md">
                     <NavbarBrand href="/" style={{float: 'left', marginLeft: '2%'}}> 
-                            <img alt="Plasma Genesis" width="45px" height="45px" src="assets/images/logo.png" /> 
+                            <img alt="Plasma Genesis" width="45px" height="45px" src="../../../assets/images/logo.png" /> 
                             <strong>Plasma Genesis</strong>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNav}/>
                     <Collapse isOpen={this.state.isNavOpen} navbar  style={{float: 'left', marginLeft: '40px'}}>
-                            {/* <SignIn /> */}
-                            <SignOut />
+                            {/* <SignInLinks /> */}
+                            <SignOutLinks />
                      </Collapse>
             </Navbar>
         );

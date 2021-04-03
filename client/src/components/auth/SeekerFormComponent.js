@@ -1,6 +1,6 @@
 import React from 'react';
 import {Form, FormGroup, Input, Label,Col, Button, Row} from 'reactstrap';
-import '../styles/FormComponent.css';
+import '../../styles/FormComponent.css';
 
 function SeekerForm(props){
 
@@ -188,7 +188,7 @@ function SeekerForm(props){
                      </FormGroup>                  
                 <br />
                     <FormGroup row style={{justifyContent:"center"}}>
-                        <Button type="submit" className="addsubmit">
+                        <Button type="submit" className="submit-form">
                             <strong>Register</strong> 
                         </Button>
                     </FormGroup>

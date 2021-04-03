@@ -42,7 +42,7 @@ import {ListGroup, ListGroupItem} from 'reactstrap';
 
     const SeekerProfile = (props) => {
         return(
-            <div className="container">
+            <div className="container" style={{marginTop: '30px'}}>
                 <RenderSeeker seeker = {props.seeker} />
            </div>
         );

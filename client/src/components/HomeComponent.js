@@ -18,7 +18,12 @@ function Home(props) {
                 </div>
             </Jumbotron>
             <h1>Home</h1>
-            <Circle bgColor='#171E45' />
+            <Circle 
+                bgColor='#0F152E' 
+                seekers = {props.totalSeekers}
+                donors = {props.totalDonors}
+                hospitals = {props.totalHospitals}/>
+            <p>The Manager of the contract is {props.plasmaManager}.</p>
            </>  
     );
 }

@@ -1,24 +1,12 @@
 import React from 'react';
 import '../../styles/HeaderComponent.css';
-import { Nav, NavItem, UncontrolledDropdown,DropdownToggle,DropdownMenu,DropdownItem} from 'reactstrap';
+import { Nav, NavItem, UncontrolledDropdown, DropdownItem,DropdownToggle, DropdownMenu} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
-function SignOut(props){
-        return(        
-            <Nav navbar className="ml-auto">
-                <NavItem>
-                    <NavLink className="nav-link" to="/aboutus">
-                       <strong>About Us</strong>
-                    </NavLink>
-                </NavItem>
-
-                <NavItem>
-                    <NavLink className="nav-link" to="/contactus">
-                       <strong>Contact Us</strong>
-                    </NavLink>
-                </NavItem>
-                
-                <UncontrolledDropdown inNavbar setActiveFromChild>
+function SignOutLinks (props) {
+    return(      
+            <Nav navbar className="ml-auto"> 
+            <UncontrolledDropdown inNavbar setActiveFromChild>
                             <DropdownToggle nav caret >  
                                    <strong>Get Started</strong> 
                             </DropdownToggle>
@@ -36,16 +24,15 @@ function SignOut(props){
                                 <strong>Join as Donor</strong>
                                 </DropdownItem>
                             </DropdownMenu>
-                </UncontrolledDropdown>
 
-                <NavItem>
-                    <NavLink className="nav-link" to="/home">
-                       <strong> LogOut </strong>
+            </UncontrolledDropdown>
+            <NavItem>
+                    <NavLink className="nav-link" to="/login">
+                       <strong> LogIn </strong>
                     </NavLink>
-                </NavItem>
-            </Nav>      
-    );
-  
+            </NavItem>    
+            </Nav>
+    )
 }
 
-export default SignOut;
+export default SignOutLinks;
