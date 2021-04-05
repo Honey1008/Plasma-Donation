@@ -1,6 +1,6 @@
 import React from 'react';
 import {Jumbotron} from 'reactstrap';
-import '../styles/HomeComponent.css';
+import '../../styles/HomeComponent.css';
 import Circle from './CircleComponent';
 
 function Home(props) {

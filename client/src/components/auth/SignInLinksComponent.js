@@ -1,9 +1,9 @@
-
-
 import React from 'react';
 import '../../styles/HeaderComponent.css';
 import { Nav, NavItem} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signOut } from '../../redux/actions/authAction';
 
 function SignInLinks(props){
         return(        
@@ -27,7 +27,7 @@ function SignInLinks(props){
                 </NavItem>
 
                 <NavItem>
-                    <NavLink className="nav-link" to="/home">
+                    <NavLink className="nav-link" to="/home" onClick={props.signOut}>
                        <strong> LogOut </strong>
                     </NavLink>
                 </NavItem>
@@ -36,4 +36,10 @@ function SignInLinks(props){
   
 }
 
-export default SignInLinks;
+const mapDispatchToProps = (dispatch) => {
+    return{
+        signOut: () => dispatch(signOut())
+    }
+}
+
+export default connect(null,mapDispatchToProps)(SignInLinks);

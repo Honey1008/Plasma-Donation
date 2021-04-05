@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
 import PlasmaDonation from "../contracts/PlasmaDonation.json";
 import getWeb3 from "../getWeb3";
-import Home from './HomeComponent';
+import Home from './layout/HomeComponent';
 import Header from './layout/HeaderComponent';
 import Footer from './layout/FooterComponent';
 import FollowUs from './layout/FollowComponent';
@@ -12,19 +12,17 @@ import HospitalForm from './auth/HospitalFormComponent';
 import SeekerForm from './auth/SeekerFormComponent';
 import DonorForm from './auth/DonorFormComponent';
 import SeekerProfile from './pools/ProfileComponent';
-import Contact from './ContactComponent';
+import Contact from './layout/ContactComponent';
 import Dashboard from './dashboard/DashBoardComponent';
 import LoginPage from './auth/LoginPageComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form'
+import { SEEKERS } from '../shared/seekers';
 
-const mapStatetoProps = state => {
-  return {
-    seekers : state.seekers,
-    hospitals : state.hospitals
-  }
-}
-
+const mapDispatchToProps = (dispatch) => ({
+  resetFeedbackForm: () => {dispatch(actions.reset('feedback'))}
+});
 
 class Main extends Component {
 
@@ -33,7 +31,8 @@ class Main extends Component {
     web3: null, 
     plasmaManager: null, 
     isManager: false,
-    totalSeekers : 1,
+    seekers: SEEKERS,
+    totalSeekers : '',
     totalDonors : '',
     totalHospitals : '',
     totalTransfusions : ''
@@ -68,13 +67,13 @@ class Main extends Component {
       const donor = await this.state.contract.methods.viewAllDonors().call();
       const hospital = await this.state.contract.methods.viewAllHospitals().call();
 
-
         this.setState({
           plasmaManager: await this.state.contract.methods.plasmaManager().call(),
           totalSeekers : seeker.length,
           totalDonors : donor.length,
           totalHospitals : hospital.length
         });
+
       } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -89,7 +88,7 @@ class Main extends Component {
   render(){
    const SeekerWithId = ({match}) => {
      return(
-       <SeekerProfile seeker={this.props.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
+       <SeekerProfile seeker={this.state.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
       );
 
    }
@@ -108,11 +107,11 @@ class Main extends Component {
                         totalDonors = {this.state.totalDonors}
                         totalHospitals = {this.state.totalHospitals} />} />
 
-        <Route path="/hospitals" component={()=> <HospitalPool hospitals={this.props.hospitals} /> } />
-        <Route exact path="/seekers" component={() => <SeekerPool seekers={this.props.seekers}/> } />
+        <Route path="/hospitals" component={()=> <HospitalPool /> } />
+        <Route exact path="/seekers" component={() => <SeekerPool seekers={this.state.seekers}/> } />
         <Route path="/seekers/:seekerId" component={SeekerWithId} />
         <Route path ="/donors" component={DonorPool} />
-        <Route path="/contactus" component={Contact} />
+        <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
         <Route path ="/hospitalform" component={HospitalForm} />
         <Route path="/seekerform" component={SeekerForm} />
         <Route path="/donorform" component={DonorForm} />
@@ -128,4 +127,4 @@ class Main extends Component {
   
 }
 
-export default withRouter(connect(mapStatetoProps)(Main));
+export default withRouter(connect(null, mapDispatchToProps)(Main));

@@ -6,10 +6,27 @@ import 'bootstrap-social/bootstrap-social.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { applyMiddleware, createStore, compose } from 'redux';
+import {rootReducer} from './redux/reducers/rootReducer';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import { reactReduxFirebase, getFirebase} from 'react-redux-firebase';
+import { reduxFirestore, getFirestore} from 'redux-firestore';
+import fbConfig from './config/fbConfig';
+
+
+const store = createStore(rootReducer,compose(
+    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore }),logger),
+    reduxFirestore(fbConfig),
+    reactReduxFirebase(fbConfig)
+));    
 
 ReactDOM.render(
     <>
-        <App />   
+        <Provider store={store}>
+            <App />   
+        </Provider>
     </>
     ,
     document.getElementById('root')

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import '../../styles/HeaderComponent.css';
 import { Navbar, NavbarBrand, NavbarToggler, Collapse} from 'reactstrap';
-import SignInLinks from './SignInLinksComponent';
-import SignOutLinks from './SignOutLinksComponent';
-
+import SignInLinks from '../auth/SignInLinksComponent';
+import SignOutLinks from '../auth/SignOutLinksComponent';
+import { connect } from 'react-redux';
 
 class Header extends Component{
 
@@ -22,6 +22,8 @@ class Header extends Component{
     }
 
     render(){
+        const { auth } = this.props;
+        const links = auth.uid ? <SignInLinks /> : <SignOutLinks />
         return( 
             <Navbar dark expand="md">
                     <NavbarBrand href="/" style={{float: 'left', marginLeft: '2%'}}> 
@@ -30,12 +32,17 @@ class Header extends Component{
                     </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNav}/>
                     <Collapse isOpen={this.state.isNavOpen} navbar  style={{float: 'left', marginLeft: '40px'}}>
-                            {/* <SignInLinks /> */}
-                            <SignOutLinks />
+                         { links }
                      </Collapse>
             </Navbar>
         );
     }
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+    return {
+        auth: state.firebase.auth
+    }
+}
+
+export default connect(mapStateToProps)(Header);

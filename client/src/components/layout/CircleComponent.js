@@ -2,8 +2,8 @@ import React from 'react';
 
 function Circle(props){
     var circleStyle = {
-      padding:10,
-      margin: '30px 65px',
+      padding: '10',
+      margin: '70px 65px',
       display:"inline-block",
       backgroundColor: props.bgColor,
       borderRadius: "50%",
@@ -15,7 +15,7 @@ function Circle(props){
 
     var linkStyle = {
         color: 'white',
-        textDecoration: 'none'
+        textDecoration: 'none',
     }
 
     var headingStyle = {
@@ -30,24 +30,24 @@ function Circle(props){
             <div style={circleStyle}>
                 <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.hospitals} </a></h2>
                 <br />  
-                <h5 style={{color: 'white'}}>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/hospitals" style={linkStyle}> Total Hospitals</a></h5>
+                <h5 style={{color: 'white',textAlign: 'center'}}><a href="/hospitals" style={linkStyle}> Total Hospitals</a></h5>
             </div>
             <div style={circleStyle}>
                 <h2 style={headingStyle}> <a href="/seekers" style={linkStyle}> {props.seekers} </a></h2> 
                 <br />
-                <h5 style={{color: 'white'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h5 style={{color: 'white',textAlign: 'center'}}>
                 <a href="/seekers" style={linkStyle}>Total Seekers</a></h5>
             </div>
             <div style={circleStyle}>
                 <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.donors} </a> </h2> 
                 <br />
-                <h5 style={{color: 'white'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h5 style={{color: 'white',textAlign: 'center'}}>
                 <a href="/hospitals" style={linkStyle}>Total Donors</a></h5>
             </div>
             <div style={circleStyle}>
                 <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> 0 </a> </h2> 
                 <br />
-                <h5 style={{color: 'white'}}>&nbsp;&nbsp;<a href="/hospitals" style={linkStyle}>Total Transfusions</a></h5>
+                <h5 style={{color: 'white',textAlign: 'center'}}><a href="/hospitals" style={linkStyle}>Total Transfusions</a></h5>
             </div>
      </>
     );

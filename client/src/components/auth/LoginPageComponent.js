@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Form, FormGroup,Label,Col,Input,Button } from "reactstrap";
+import { Form, FormGroup,Label,Col,Input,Button, FormFeedback } from "reactstrap";
+import { connect } from 'react-redux';
+import { signIn } from '../../redux/actions/authAction';
 
 class LoginPage extends Component {
     state = {
@@ -14,10 +16,11 @@ class LoginPage extends Component {
 
     handleLogin = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        this.props.signIn(this.state);
     }
 
     render() {
+        const { authError } = this.props;
         return (
             <div className="container">                
                 <div className="form-header"> 
@@ -54,7 +57,11 @@ class LoginPage extends Component {
                         <FormGroup row style={{justifyContent:"center"}}>
                             <Button type="submit" className="submit-form">Login</Button>
                         </FormGroup>
-                        
+
+                        <div style={{color: 'red', textAlign: 'center' }}>
+                          { authError ? <p>{authError}</p>: null}
+                        </div>
+                       
                     </Form>   
                 </div>  
             </div>
@@ -62,4 +69,15 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+const mapStateToProps = (state) => {
+    return{
+        authError : state.auth.authError
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        signIn : (creds) => dispatch(signIn(creds))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(LoginPage);

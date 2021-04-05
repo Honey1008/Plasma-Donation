@@ -23,8 +23,8 @@ function Footer(props) {
                             <ul className="list-unstyled">
                                 <li><Link className="link-content" to="/plasmamanager">Plasma Center</Link></li>
                                 <li><Link className="link-content" to="/hospitals">Hospitals</Link></li>
-                                <li><Link className="link-content" to="/seekers">Seeker</Link></li>
-                                <li><Link className="link-content" to="/donors">Donor</Link></li>   
+                                <li><Link className="link-content" to="/seekers">Seekers</Link></li>
+                                <li><Link className="link-content" to="/donors">Donors</Link></li>   
                             </ul>
                         </div>  
                         <div className="col-md-3 col-sm-4 ml-auto">

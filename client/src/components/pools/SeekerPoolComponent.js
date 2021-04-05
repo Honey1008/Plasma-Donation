@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function RenderSeeker({seeker}){
     return(
         <Card>
-            <CardBody>
+             <CardBody>
                     <CardImg width="100%" src={seeker.img} alt={seeker.name}/>
                     <CardTitle tag="h5">{seeker.name}</CardTitle>
                     <CardSubtitle tag="h6">{seeker.ethseeker}</CardSubtitle>
