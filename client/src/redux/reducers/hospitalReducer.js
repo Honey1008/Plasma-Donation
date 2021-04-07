@@ -28,15 +28,16 @@ const initState = {
 }
 
 export const Hospitals = (state = initState, action) => {
-    // switch(action.type) {
-    //     case 'ADD_HOSPITAL':
-    //         console.log('Added Hospital',action.hospital);
-    //         return state;
-    //         break;
-    //     case 'ADD_HOSPITAL_ERROR':
-    //         console.log('Add Hospital Error',action.err);
-    //         return state;
-    //         break;         
-    //     default: 
+    switch(action.type) {
+        case 'ADD_HOSPITAL':
+            console.log('Added Hospital',action.hospital);
+            return state;
+            break;
+        case 'ADD_HOSPITAL_ERROR':
+            console.log('Add Hospital Error',action.err);
+            return state;
+            break;         
+        default: 
             return state;
     }
+}

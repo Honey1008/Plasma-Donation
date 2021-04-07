@@ -28,14 +28,9 @@ class Main extends Component {
 
   state = { 
     contract: undefined, 
+    accounts: null,
     web3: null, 
-    plasmaManager: null, 
-    isManager: false,
-    seekers: SEEKERS,
-    totalSeekers : '',
-    totalDonors : '',
-    totalHospitals : '',
-    totalTransfusions : ''
+    seekers: SEEKERS
   };
 
   componentDidMount = async () => {
@@ -51,7 +46,7 @@ class Main extends Component {
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-
+    
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = PlasmaDonation.networks[networkId];
@@ -59,21 +54,9 @@ class Main extends Component {
         PlasmaDonation.abi,
         deployedNetwork && deployedNetwork.address,
       );
-
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, contract: instance }, this.runExample);
-      const seeker = await this.state.contract.methods.viewAllSeekers().call();
-      const donor = await this.state.contract.methods.viewAllDonors().call();
-      const hospital = await this.state.contract.methods.viewAllHospitals().call();
-
-        this.setState({
-          plasmaManager: await this.state.contract.methods.plasmaManager().call(),
-          totalSeekers : seeker.length,
-          totalDonors : donor.length,
-          totalHospitals : hospital.length
-        });
-
+      this.setState({ web3,accounts, contract: instance });
       } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -82,10 +65,9 @@ class Main extends Component {
       console.error(error);
     }
   };
-
   
 
-  render(){
+  render() {
    const SeekerWithId = ({match}) => {
      return(
        <SeekerProfile seeker={this.state.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
@@ -101,13 +83,9 @@ class Main extends Component {
       <Header />      
       <Switch>
         <Route path="/home" 
-          component={() => <Home 
-                        plasmaManager = {this.state.plasmaManager} 
-                        totalSeekers = {this.state.totalSeekers} 
-                        totalDonors = {this.state.totalDonors}
-                        totalHospitals = {this.state.totalHospitals} />} />
+          component={() => <Home />} />
 
-        <Route path="/hospitals" component={()=> <HospitalPool /> } />
+        <Route path="/hospitals" component={HospitalPool} />
         <Route exact path="/seekers" component={() => <SeekerPool seekers={this.state.seekers}/> } />
         <Route path="/seekers/:seekerId" component={SeekerWithId} />
         <Route path ="/donors" component={DonorPool} />

@@ -1,10 +1,44 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Jumbotron} from 'reactstrap';
+import PlasmaDonation from '../../contracts/PlasmaDonation';
+import instance from '../../contracts/instance';
+import web3 from '../../contracts/web3';
 import '../../styles/HomeComponent.css';
 import Circle from './CircleComponent';
 
-function Home(props) {
-    return(
+class Home extends Component {
+
+    state = {
+        plasmaManager : '',
+        contractAddress : null,
+        totalSeekers : null,
+        totalDonors: null,
+        totalHospitals : null
+    }
+
+    componentDidMount = async() => {
+        const networkId = await web3.eth.net.getId();
+        const deployedNetwork = PlasmaDonation.networks[networkId];
+        const plasmaManager = await instance.methods.plasmaManager().call();
+        const seekers = await instance.methods.viewAllSeekers().call();
+        const donors = await instance.methods.viewAllDonors().call();
+        const hospitals = await instance.methods.viewAllHospitals().call();
+
+        console.log(plasmaManager);
+        console.log(deployedNetwork.address);
+
+        this.setState({
+            plasmaManager,
+            contractAddress : deployedNetwork.address,
+            totalSeekers : seekers.length,
+            totalDonors : donors.length,
+            totalHospitals : hospitals.length
+        })
+    }
+   
+
+    render() {
+        return(
             <>
              <Jumbotron>
                 <div className="conatiner">
@@ -18,13 +52,13 @@ function Home(props) {
                 </div>
             </Jumbotron>
             <h1>Home</h1>
-            <Circle 
-                bgColor='#0F152E' 
-                seekers = {props.totalSeekers}
-                donors = {props.totalDonors}
-                hospitals = {props.totalHospitals}/>
-            <p>The Manager of the contract is {props.plasmaManager}.</p>
+            <Circle totalHospitals={this.state.totalHospitals}
+            totalSeekers = {this.state.totalSeekers}
+            totalDonors = {this.state.totalDonors}/>
+            <h6>The contract is deployed to address {this.state.contractAddress}</h6>
+            <h6>The Manager of the contract is {this.state.plasmaManager}</h6>
            </>  
-    );
-}
+        );
+    }
+}  
 export default Home; 

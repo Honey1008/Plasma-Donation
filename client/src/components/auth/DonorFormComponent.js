@@ -1,26 +1,88 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {Form, FormGroup, Input, Label,Col, Button, Row} from 'reactstrap';
+import instance from '../../contracts/instance';
+import web3 from '../../contracts/web3';
 
+class DonorForm extends Component{
 
-function DonorForm(props) {
+    state = {
+        donorfname : '',
+        donorlname : '',
+        donornum : '',
+        donoremail : '',
+        donoraddress : '',
+        donorcity : '',
+        donorzipcode : '',
+        donorstate : '',
+        donorcountry : '',
+        donorBG : 'A+',
+        donorgender : 'Male',
+        donorage : '', 
+        donorweight : 0,
+        donorMH : 'None',
+        donorDonatedOn : '',
+        donorhospital : ''
+    }
+
+    calculateHash(str, algo = "SHA-256") {
+        let strBuf = new TextEncoder('utf-8').encode(str);
+        return crypto.subtle.digest(algo, strBuf)
+          .then(hash => {
+            window.hash = hash;
+            // here hash is an arrayBuffer, 
+            // so we'll connvert it to its hex version
+            let result = '';
+            const view = new DataView(hash);
+            for (let i = 0; i < hash.byteLength; i += 4) {
+              result += ('00000000' + view.getUint32(i).toString(16)).slice(-8);
+            }
+            return result;
+          });
+    }  
+    
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value
+        })
+    }
+
+    handleDonorRegister(event){
+        event.preventDefault();  
+        let hashOfDonorData;
+        const dataString = this.state.donorfname+this.state.donorlname+this.state.donornum+ this.state.donoremail+ this.state.donoraddress
+                            +this.state.donorcity+this.state.donorzipcode+this.state.donorstate+this.state.donorcountry+this.state.donorBG
+                            +this.state.donorage+this.state.donorweight+ this.state.donorgender+this.state.donorMH + this.state.donordescription;
+        dataString.replace(/\s+/g, '');
+        this.calculateHash(dataString)
+            .then(
+                hash => {
+                 hashOfDonorData = hash;
+                }
+            );
+
+    }
+
+    render(){
+
         return(
             <div className="container">
                 <div className="form-header">
                      <h3><strong> Donor Form </strong></h3>
                 </div>  
                 <div className="form-body">
-                    <Form>
+                    <Form onSubmit={this.handleDonorRegister}>
                         <Row form>
                             <Col md={6}>
                              <FormGroup>
                                 <Label htmlFor="donorfname">First Name</Label>
-                                <Input type="text" name="donorfname" id="donorfname" placeholder="First Name" />
+                                <Input type="text" name="donorfname" id="donorfname" placeholder="First Name" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="donorlname">Last Name</Label>
-                                <Input type="text" name="donorlname" id="donorlname" placeholder="Last Name" />
+                                <Input type="text" name="donorlname" id="donorlname" placeholder="Last Name" onChange={this.handleChange}/>
                             </FormGroup>
                          </Col>
                         </Row>
@@ -28,45 +90,45 @@ function DonorForm(props) {
                             <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="donornum" >Phone Number</Label>
-                                <Input type="text" name="donornum" id="donornum" placeholder="Phone Number" />
+                                <Input type="text" name="donornum" id="donornum" placeholder="Phone Number" onChange={this.handleChange}/>
                             </FormGroup>
                             </Col>
                             <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="donoremail">Email</Label>
-                                <Input type="text" name="donoremail" id="donoremail" placeholder="Email" />                              
+                                <Input type="text" name="donoremail" id="donoremail" placeholder="Email" onChange={this.handleChange}/>                              
                             </FormGroup>
                             </Col>
                         </Row> 
 
                         <FormGroup>
                             <Label htmlFor="donoraddress">Address</Label>
-                            <Input type="text" name="donoraddress" id="donoraddress" placeholder="Address"/>
+                            <Input type="text" name="donoraddress" id="donoraddress" placeholder="Address" onChange={this.handleChange}/>
                         </FormGroup>
 
                         <Row form>
                         <Col md={3}>
                             <FormGroup>
                                 <Label htmlFor="donorcity">City</Label>
-                                <Input type="text" name="donorcity" id="donorcity" placeholder="City" />
+                                <Input type="text" name="donorcity" id="donorcity" placeholder="City" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
-                                <Label htmlFor="donorzip">Zipcode</Label>
-                                <Input type="text" name="donorzip" id="donorzip" placeholder="Zipcode" />    
+                                <Label htmlFor="donorzipcode">Zipcode</Label>
+                                <Input type="text" name="donorzipcode" id="donorzipcode" placeholder="Zipcode" onChange={this.handleChange}/>    
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
                                 <Label htmlFor="donorstate">State </Label>
-                                <Input type="text" name="donorstate" id="donorstate" placeholder="State" />
+                                <Input type="text" name="donorstate" id="donorstate" placeholder="State" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
                                 <Label htmlFor="donorcountry">Country</Label>
-                                <Input type="text" name="donorcountry" id="donorcountry" placeholder="Country" />    
+                                <Input type="text" name="donorcountry" id="donorcountry" placeholder="Country" onChange={this.handleChange}/>    
                             </FormGroup>
                         </Col>
                     </Row>
@@ -75,7 +137,7 @@ function DonorForm(props) {
                         <Col md={4}>
                             <FormGroup>
                                 <Label htmlFor="donorBG">Blood Group</Label>
-                                <Input type="select" name="donorBG">
+                                <Input type="select" name="donorBG" onChange={this.handleChange}>
                                     <option>A+</option>
                                     <option>A-</option>
                                     <option>B+</option>
@@ -90,13 +152,13 @@ function DonorForm(props) {
                         <Col md={4}>
                             <FormGroup>
                                 <Label htmlFor="donorage">Age</Label>
-                                <Input type="text" name="donorage" id="donorage" placeholder="Age" />                                
+                                <Input type="text" name="donorage" id="donorage" placeholder="Age" onChange={this.handleChange}/>                                
                             </FormGroup>
                         </Col>
                         <Col md={4}>
                             <FormGroup>
                                 <Label htmlFor="donorweight">Weight</Label>
-                                <Input type="text" name="donorweight" id="donorweight" placeholder="Weight" />
+                                <Input type="text" name="donorweight" id="donorweight" placeholder="Weight" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                     </Row> 
@@ -111,13 +173,13 @@ function DonorForm(props) {
                         </Col>   
                         <Col md={2}>
                                 <Label check>
-                                    <Input type="radio" name="donorgender" id="female" value="female" /> {' '}
+                                    <Input type="radio" name="donorgender" id="female" value="female" onChange={this.handleChange}/> {' '}
                                    <span style={{margin: '30px'}}> Female </span>
                                 </Label>
                         </Col>
                         <Col md={2}>
                                 <Label check>
-                                    <Input type="radio" name="donorgender" id="other" value="other"/> {' '}
+                                    <Input type="radio" name="donorgender" id="other" value="other" onChange={this.handleChange}/> {' '}
                                     <span style={{margin: '30px'}}>Other</span>
                                 </Label>
                         </Col>
@@ -125,7 +187,7 @@ function DonorForm(props) {
 
                     <FormGroup>
                         <Label htmlFor="donorMH">Medical History</Label>
-                        <Input type="select" name="donorMH" aria-multiselectable className="inputscroll">
+                        <Input type="select" name="donorMH" aria-multiselectable className="inputscroll" onChange={this.handleChange}>
                             <option>None</option>
                             <option>Anaemia, including haematinic (iron, B12 and folate) deficiency</option>
                             <option>Blood Pressure</option>
@@ -152,7 +214,8 @@ function DonorForm(props) {
 
                     <FormGroup>                       
                         <Label htmlFor="donorMH">Other</Label>
-                        <Input type="text" name="donorMH" id="donorMH" placeholder="If you selected other option mention the disease here" />
+                        <Input type="text" name="donorMH" id="donorMH" 
+                        placeholder="If you selected other option mention the disease here" onChange={this.handleChange}/>
                     </FormGroup>
 
                     <FormGroup row>
@@ -178,6 +241,7 @@ function DonorForm(props) {
                          name="donorDonatedOn"
                          id="donorDonatedOn"
                          placeholder="Date"
+                         onChange={this.handleChange}
                         />
                     </FormGroup>                  
                         
@@ -192,6 +256,7 @@ function DonorForm(props) {
                 </div>
             </div>
         );
+    }
 }
 
 export default DonorForm;

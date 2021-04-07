@@ -3,10 +3,12 @@ import {connect} from 'react-redux';
 import '../../styles/FormComponent.css';
 import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
 import { addHospital } from '../../redux/actions/hospitalAction';
+import instance from '../../contracts/instance';
+import web3 from '../../contracts/web3';
 
 class HospitalForm extends Component {
    
-    state = {
+    state = {       
         ethHospital: '',
         hospitalName: '',
         hospitalEmail: '',
@@ -14,8 +16,7 @@ class HospitalForm extends Component {
         hospitalAddress: '',
         hospitalCity: '',
         hospitalState: '',
-        hospitalCountry: '',
-        hospitalHashData: ''
+        hospitalCountry: ''
     }
 
     calculateHash(str, algo = "SHA-256") {
@@ -32,38 +33,44 @@ class HospitalForm extends Component {
             }
             return result;
           });
-      }
-      
-      
-
+    }   
+    
     handleChange = (event) => {
         this.setState({
             [event.target.id]: event.target.value
         })
     }
 
+    addHospital = async(ethHospital,name,hash) => {
+        const accounts = await web3.eth.getAccounts();
+        await instance.methods.addHospital(ethHospital,name,hash)
+        .send({
+            from: accounts[0]
+        })
+    }
+   
     handleHospitalRegister = (event) => {
         event.preventDefault();  
-        this.props.addHospital(this.state);
+        let hashOfHospitalData;
+        this.props.addHospital(this.state.hospital);
         const dataString = this.state.hospitalName+this.state.hospitalEmail+this.state.hospitalContact+
         this.state.hospitalAddress+this.state.hospitalCity+this.state.hospitalState+this.state.hospitalCountry;
-        dataString.replace(/\s+/g, '') 
+        dataString.replace(/\s+/g, '');
         this.calculateHash(dataString)
             .then(
                 hash => {
-                    console.log(hash);
+                 hashOfHospitalData = hash;
                 }
             );
-        // console.log(this.state); 
+        addHospital(this.state.ethHospital,this.state.hospitalName,hashOfHospitalData);
     }
-
 
     render(){
         return(
             <div className="container">
                 
                 <div className="form-header"> 
-                <h3><strong> Hospital Form </strong></h3>
+                    <h3><strong> Hospital Form </strong></h3>
                 </div>
     
                 <div className="form-body">

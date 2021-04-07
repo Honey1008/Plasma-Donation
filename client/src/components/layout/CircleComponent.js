@@ -1,11 +1,14 @@
 import React from 'react';
+import instance from '../../contracts/instance';
 
-function Circle(props){
+
+function Circle(props) {
+   
     var circleStyle = {
       padding: '10',
       margin: '70px 65px',
       display:"inline-block",
-      backgroundColor: props.bgColor,
+      backgroundColor: '#0F152E',
       borderRadius: "50%",
       width: 200,
       height: 200,
@@ -28,18 +31,18 @@ function Circle(props){
     return (
     <>
             <div style={circleStyle}>
-                <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.hospitals} </a></h2>
+                <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.totalHospitals} </a></h2>
                 <br />  
                 <h5 style={{color: 'white',textAlign: 'center'}}><a href="/hospitals" style={linkStyle}> Total Hospitals</a></h5>
             </div>
             <div style={circleStyle}>
-                <h2 style={headingStyle}> <a href="/seekers" style={linkStyle}> {props.seekers} </a></h2> 
+                <h2 style={headingStyle}> <a href="/seekers" style={linkStyle}> {props.totalSeekers} </a></h2> 
                 <br />
                 <h5 style={{color: 'white',textAlign: 'center'}}>
                 <a href="/seekers" style={linkStyle}>Total Seekers</a></h5>
             </div>
             <div style={circleStyle}>
-                <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.donors} </a> </h2> 
+                <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> {props.totalDonors} </a> </h2> 
                 <br />
                 <h5 style={{color: 'white',textAlign: 'center'}}>
                 <a href="/hospitals" style={linkStyle}>Total Donors</a></h5>
