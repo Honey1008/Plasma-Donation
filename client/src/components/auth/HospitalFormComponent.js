@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import '../../styles/FormComponent.css';
-import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Spinner} from 'reactstrap';
 import { addHospital } from '../../redux/actions/hospitalAction';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
+import { sha256 } from 'js-sha256';
+import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 
 class HospitalForm extends Component {
    
-    state = {       
+    state = {          
         ethHospital: '',
         hospitalName: '',
         hospitalEmail: '',
@@ -16,53 +18,51 @@ class HospitalForm extends Component {
         hospitalAddress: '',
         hospitalCity: '',
         hospitalState: '',
-        hospitalCountry: ''
+        hospitalCountry: '',   
+        errorMessage : ''
     }
-
-    calculateHash(str, algo = "SHA-256") {
-        let strBuf = new TextEncoder('utf-8').encode(str);
-        return crypto.subtle.digest(algo, strBuf)
-          .then(hash => {
-            window.hash = hash;
-            // here hash is an arrayBuffer, 
-            // so we'll connvert it to its hex version
-            let result = '';
-            const view = new DataView(hash);
-            for (let i = 0; i < hash.byteLength; i += 4) {
-              result += ('00000000' + view.getUint32(i).toString(16)).slice(-8);
-            }
-            return result;
-          });
-    }   
-    
+ 
     handleChange = (event) => {
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id] : event.target.value
         })
-    }
-
-    addHospital = async(ethHospital,name,hash) => {
-        const accounts = await web3.eth.getAccounts();
-        await instance.methods.addHospital(ethHospital,name,hash)
-        .send({
-            from: accounts[0]
-        })
-    }
+    } 
    
-    handleHospitalRegister = (event) => {
+    handleHospitalRegister = async (event) => {
         event.preventDefault();  
-        let hashOfHospitalData;
-        this.props.addHospital(this.state.hospital);
-        const dataString = this.state.hospitalName+this.state.hospitalEmail+this.state.hospitalContact+
-        this.state.hospitalAddress+this.state.hospitalCity+this.state.hospitalState+this.state.hospitalCountry;
+        const dataString = this.state.hospitalName+this.state.hospitalEmail
+        +this.state.hospitalContact+this.state.hospitalAddress
+        +this.state.hospitalCity+this.state.hospitalState
+        +this.state.hospitalCountry;
         dataString.replace(/\s+/g, '');
-        this.calculateHash(dataString)
-            .then(
-                hash => {
-                 hashOfHospitalData = hash;
-                }
-            );
-        addHospital(this.state.ethHospital,this.state.hospitalName,hashOfHospitalData);
+        var hashOfHospitalData = sha256(dataString);
+       
+        try{
+                const accounts = await web3.eth.getAccounts();
+                await instance.methods
+                .addHospital(this.state.ethHospital,this.state.hospitalName,
+                hashOfHospitalData)
+                .send({
+                    from: accounts[0]
+                });
+
+                this.props.addHospital({
+                    ethHospital: this.state.ethHospital,
+                    hospitalName: this.state.hospitalName,
+                    hospitalEmail: this.state.hospitalEmail,
+                    hospitalContact: this.state.hospitalContact,
+                    hospitalAddress: this.state.hospitalAddress,
+                    hospitalCity: this.state.hospitalCity,
+                    hospitalState: this.state.hospitalState,
+                    hospitalCountry: this.state.hospitalCountry
+                });
+                this.setState({
+                    errorMessage : ''
+                })
+
+        } catch (err) {
+                this.setState({ errorMessage: err.message });
+        }
     }
 
     render(){
@@ -135,6 +135,7 @@ class HospitalForm extends Component {
                             <strong>Register</strong> 
                         </Button>
                     </FormGroup>
+                    <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
                 </Form>
             </div>
         </div>

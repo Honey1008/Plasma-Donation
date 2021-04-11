@@ -19,13 +19,17 @@ class Home extends Component {
     componentDidMount = async() => {
         const networkId = await web3.eth.net.getId();
         const deployedNetwork = PlasmaDonation.networks[networkId];
-        const plasmaManager = await instance.methods.plasmaManager().call();
+        let plasmaManager; 
+        await instance.methods.plasmaManager().call(function (err, res) {
+            if (err) {
+              console.log("An error occured : ", err);
+              return
+            }
+            plasmaManager = res;
+        });
         const seekers = await instance.methods.viewAllSeekers().call();
         const donors = await instance.methods.viewAllDonors().call();
         const hospitals = await instance.methods.viewAllHospitals().call();
-
-        console.log(plasmaManager);
-        console.log(deployedNetwork.address);
 
         this.setState({
             plasmaManager,
@@ -51,12 +55,15 @@ class Home extends Component {
                     </div>
                 </div>
             </Jumbotron>
+            <div className="home-content">
             <h1>Home</h1>
+          
             <Circle totalHospitals={this.state.totalHospitals}
             totalSeekers = {this.state.totalSeekers}
             totalDonors = {this.state.totalDonors}/>
             <h6>The contract is deployed to address {this.state.contractAddress}</h6>
             <h6>The Manager of the contract is {this.state.plasmaManager}</h6>
+            </div>
            </>  
         );
     }

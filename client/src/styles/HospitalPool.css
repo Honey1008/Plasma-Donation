@@ -1,7 +1,7 @@
 .media-list {
 	box-sizing: border-box;
-	padding: 20px;
-	margin: 20px;
+	padding: 20px 10px;
+	margin: 10px 10px;
 }
 
 a:hover {

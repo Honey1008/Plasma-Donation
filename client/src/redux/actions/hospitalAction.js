@@ -12,3 +12,15 @@ export const addHospital = (hospital) => {
             })     
     };
 };
+
+export const removeHospital = (hospitalId) => {
+    return(dispatch, getState, {getFirestore}) => {
+        const firestore = getFirestore();
+        firestore.collection('hospitals').doc(hospitalId).delete()
+        .then(() => {
+            dispatch({ type: 'REMOVE_HOSPITAL'});
+        }).catch((err)=> {
+            dispatch({ type: 'REMOVE_HOSPITAL_ERROR', err});
+        })
+    }
+} 

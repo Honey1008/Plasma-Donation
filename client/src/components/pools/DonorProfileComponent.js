@@ -1,0 +1,89 @@
+import React from 'react';
+import { Card, CardImg, CardBody, CardTitle, CardFooter} from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap'; 
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+
+const DonorProfile = (props) => {  
+    const {donor} = props;     
+    if(donor){
+        return(
+            <div className="container" style={{marginTop: '30px'}}>
+                <div className="row">
+                    <div className="col-12 col-md-3 m-1"> 
+                        <Card>
+                        <CardImg top width="100%" src='/assets/images/profile.jpg' alt={donor.donorFname}/>
+                            <CardFooter tag='h5' className="mb-2 text-center">
+                                 {donor.donorFname + " " + donor.donorLname}
+                            </CardFooter>
+                        </Card>
+                    </div>
+                    <div className="col-12 col-md-7 m-1 offset-1">
+                            <img src="/assets/images/Ethereum.png" alt="" width="20px" height="20px"/> {' '}
+                                &nbsp;&nbsp;{donor.ethDonor}
+                                <hr />
+                        <ListGroup>
+                            <ListGroupItem className="border-0">
+                                <b>Blood Group : </b>
+                                {/* <img src="/assets/images/blood.png" alt="" width="15px" height="15px"/> {' '} */}
+                                    {donor.donorBG} &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                    <b>Phone : </b>
+                                    {/* <img src="/assets/images/call.png" alt="" width="15px" height="15px"/> */}
+                                    {donor.donorNum} 
+                            </ListGroupItem>
+                            <ListGroupItem className="border-0">
+                                <b>Email : </b>
+                                {/* <img src="/assets/images/letter.png" alt="" width="15px" height="15px"/> {' '} */}
+                                {donor.donorEmail}
+                            </ListGroupItem> 
+                            <ListGroupItem className="border-0"> 
+                              <b>Gender : </b>
+                                {donor.donorGender} &nbsp;
+                                {donor.donorGender === 'Male'? <img src="/assets/images/male.png" alt="" width="15px" height="15px"/>:
+                                donor.donorGender === 'Female'? <img src="/assets/images/female.png" alt="" width="15px" height="15px"/>:
+                                null} {' '} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                <b>Age : </b>
+                                {/* <img src="/assets/images/age.jpg" alt="" width="30px" height="30px"/> {' '} */}
+                                    {donor.donorAge} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                <b>Weight : </b>
+                                  {/* <img src="/assets/images/weight.png" alt="" width="15px" height="15px"/> {' '} */}
+                                {donor.donorWeight} 
+                            </ListGroupItem>
+                            <ListGroupItem className="border-0"> 
+                                <b>Address : </b>
+                                {/* <img src="/assets/images/location.png" alt="" width="15px" height="15px"/> {' '} */}
+                                {donor.donorAddress}, {donor.donorCity}, {donor.donorState}, {donor.donorCountry}.
+                            </ListGroupItem> 
+                            <ListGroupItem className="border-0">
+                                <b>Associated with Hospital : </b>
+                                {/* <img src="/assets/images/hospitalicon.png" alt="" width="20px" height="20px"/> */}
+                                &nbsp; {donor.donorHospital}
+                            </ListGroupItem> 
+                        </ListGroup>
+                    </div>
+               </div>
+            </div>
+        );
+    }
+    else
+        return(<div class="container" style={{paddingTop: '30px'}}>Please wait, fetching data...</div>);  
+}
+    
+const mapStateToProps = (state, ownProps) => {  
+    const id = ownProps.match.params.id;
+    const donors = state.firestore.data.donors;
+    const donor = donors ? donors[id] : null
+    return {
+        donor: donor
+    }
+}
+
+
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect([
+        { collection : 'donors'}
+    ])
+)(DonorProfile);

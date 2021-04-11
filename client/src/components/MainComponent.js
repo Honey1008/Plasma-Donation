@@ -11,14 +11,15 @@ import DonorPool from './pools/DonorPoolComponent';
 import HospitalForm from './auth/HospitalFormComponent';
 import SeekerForm from './auth/SeekerFormComponent';
 import DonorForm from './auth/DonorFormComponent';
-import SeekerProfile from './pools/ProfileComponent';
+import SeekerProfile from './pools/SeekerProfileComponent';
+import DonorProfile from './pools/DonorProfileComponent';
 import Contact from './layout/ContactComponent';
 import Dashboard from './dashboard/DashBoardComponent';
+import AboutUs from './layout/AboutUsComponent';
 import LoginPage from './auth/LoginPageComponent';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form'
-import { SEEKERS } from '../shared/seekers';
 
 const mapDispatchToProps = (dispatch) => ({
   resetFeedbackForm: () => {dispatch(actions.reset('feedback'))}
@@ -29,8 +30,7 @@ class Main extends Component {
   state = { 
     contract: undefined, 
     accounts: null,
-    web3: null, 
-    seekers: SEEKERS
+    web3: null
   };
 
   componentDidMount = async () => {
@@ -68,13 +68,6 @@ class Main extends Component {
   
 
   render() {
-   const SeekerWithId = ({match}) => {
-     return(
-       <SeekerProfile seeker={this.state.seekers.filter((seeker) => seeker.id === parseInt(match.params.seekerId,10))[0]} />
-      );
-
-   }
-
     if (!this.state.web3) { 
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -86,15 +79,17 @@ class Main extends Component {
           component={() => <Home />} />
 
         <Route path="/hospitals" component={HospitalPool} />
-        <Route exact path="/seekers" component={() => <SeekerPool seekers={this.state.seekers}/> } />
-        <Route path="/seekers/:seekerId" component={SeekerWithId} />
-        <Route path ="/donors" component={DonorPool} />
+        <Route exact path="/seekers" component={SeekerPool} />
+        <Route path="/seekers/:id" component={SeekerProfile} />
+        <Route exact path ="/donors" component={DonorPool} />
+        <Route path="/donors/:id" component={DonorProfile} />
         <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
         <Route path ="/hospitalform" component={HospitalForm} />
         <Route path="/seekerform" component={SeekerForm} />
         <Route path="/donorform" component={DonorForm} />
         <Route path ="/login" component={LoginPage} />
-        <Route path="/aboutus" component={Dashboard} />
+        <Route path="/myprofile" component={Dashboard} />
+        <Route path="/aboutus" component={AboutUs} />
         <Redirect to="/home" />
       </Switch>  
       <Footer />

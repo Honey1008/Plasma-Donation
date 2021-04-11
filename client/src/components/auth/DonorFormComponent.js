@@ -1,45 +1,33 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {addDonor} from '../../redux/actions/donorAction';
 import {Form, FormGroup, Input, Label,Col, Button, Row} from 'reactstrap';
+import '../../styles/FormComponent.css';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
+import { sha256 } from 'js-sha256';
 
 class DonorForm extends Component{
 
     state = {
-        donorfname : '',
-        donorlname : '',
-        donornum : '',
-        donoremail : '',
-        donoraddress : '',
-        donorcity : '',
-        donorzipcode : '',
-        donorstate : '',
-        donorcountry : '',
+        ethDonor : '',
+        donorFname : '',
+        donorLname : '',
+        donorNum : '',
+        donorEmail : '',
+        donorAddress : '',
+        donorCity : '',
+        donorZipcode : '',
+        donorState : '',
+        donorCountry : '',
         donorBG : 'A+',
-        donorgender : 'Male',
-        donorage : '', 
-        donorweight : 0,
+        donorGender : 'Male',
+        donorAge : 0, 
+        donorWeight : 0,
         donorMH : 'None',
-        donorDonatedOn : '',
-        donorhospital : ''
+        donorDonated : 'No',
+        donorDonatedOn : ''
     }
-
-    calculateHash(str, algo = "SHA-256") {
-        let strBuf = new TextEncoder('utf-8').encode(str);
-        return crypto.subtle.digest(algo, strBuf)
-          .then(hash => {
-            window.hash = hash;
-            // here hash is an arrayBuffer, 
-            // so we'll connvert it to its hex version
-            let result = '';
-            const view = new DataView(hash);
-            for (let i = 0; i < hash.byteLength; i += 4) {
-              result += ('00000000' + view.getUint32(i).toString(16)).slice(-8);
-            }
-            return result;
-          });
-    }  
     
     handleChange = (event) => {
         this.setState({
@@ -47,24 +35,25 @@ class DonorForm extends Component{
         })
     }
 
-    handleDonorRegister(event){
+    handleDonorRegister = async(event) => {
         event.preventDefault();  
-        let hashOfDonorData;
-        const dataString = this.state.donorfname+this.state.donorlname+this.state.donornum+ this.state.donoremail+ this.state.donoraddress
-                            +this.state.donorcity+this.state.donorzipcode+this.state.donorstate+this.state.donorcountry+this.state.donorBG
-                            +this.state.donorage+this.state.donorweight+ this.state.donorgender+this.state.donorMH + this.state.donordescription;
+        const accounts = await web3.eth.getAccounts();
+        const currentUser =  accounts[0];
+        this.setState({
+            ethDonor : currentUser
+        });
+        const dataString = this.state.ethDonor+this.state.donorFname+this.state.donorLname+this.state.donorNum+ this.state.donorEmail+ this.state.donorAddress
+                            +this.state.donorCity+this.state.donorZipcode+this.state.donorState+this.state.donorCountry+this.state.donorBG
+                            +this.state.donorAge+this.state.donorWeight+ this.state.donorGender+this.state.donorMH + this.state.donordescription;
         dataString.replace(/\s+/g, '');
-        this.calculateHash(dataString)
-            .then(
-                hash => {
-                 hashOfDonorData = hash;
-                }
-            );
-
+        const hashOfDonorData = sha256(dataString);
+        await instance.methods
+        .addDonor(hashOfDonorData)
+        .send({from: accounts[0], gas: '1000000'});     
+        this.props.addDonor(this.state);  
     }
 
     render(){
-
         return(
             <div className="container">
                 <div className="form-header">
@@ -75,60 +64,60 @@ class DonorForm extends Component{
                         <Row form>
                             <Col md={6}>
                              <FormGroup>
-                                <Label htmlFor="donorfname">First Name</Label>
-                                <Input type="text" name="donorfname" id="donorfname" placeholder="First Name" onChange={this.handleChange}/>
+                                <Label htmlFor="donorFname">First Name</Label>
+                                <Input type="text" name="donorFname" id="donorFname" placeholder="First Name" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="donorlname">Last Name</Label>
-                                <Input type="text" name="donorlname" id="donorlname" placeholder="Last Name" onChange={this.handleChange}/>
+                                <Label htmlFor="donorLname">Last Name</Label>
+                                <Input type="text" name="donorLname" id="donorLname" placeholder="Last Name" onChange={this.handleChange}/>
                             </FormGroup>
                          </Col>
                         </Row>
                         <Row form>
                             <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="donornum" >Phone Number</Label>
-                                <Input type="text" name="donornum" id="donornum" placeholder="Phone Number" onChange={this.handleChange}/>
+                                <Label htmlFor="donorNum" >Phone Number</Label>
+                                <Input type="text" name="donorNum" id="donorNum" placeholder="Phone Number" onChange={this.handleChange}/>
                             </FormGroup>
                             </Col>
                             <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="donoremail">Email</Label>
-                                <Input type="text" name="donoremail" id="donoremail" placeholder="Email" onChange={this.handleChange}/>                              
+                                <Label htmlFor="donorEmail">Email</Label>
+                                <Input type="text" name="donorEmail" id="donorEmail" placeholder="Email" onChange={this.handleChange}/>                              
                             </FormGroup>
                             </Col>
                         </Row> 
 
                         <FormGroup>
-                            <Label htmlFor="donoraddress">Address</Label>
-                            <Input type="text" name="donoraddress" id="donoraddress" placeholder="Address" onChange={this.handleChange}/>
+                            <Label htmlFor="donorAddress">Address</Label>
+                            <Input type="text" name="donorAddress" id="donorAddress" placeholder="Address" onChange={this.handleChange}/>
                         </FormGroup>
 
                         <Row form>
                         <Col md={3}>
                             <FormGroup>
-                                <Label htmlFor="donorcity">City</Label>
-                                <Input type="text" name="donorcity" id="donorcity" placeholder="City" onChange={this.handleChange}/>
+                                <Label htmlFor="donorCity">City</Label>
+                                <Input type="text" name="donorCity" id="donorCity" placeholder="City" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
-                                <Label htmlFor="donorzipcode">Zipcode</Label>
-                                <Input type="text" name="donorzipcode" id="donorzipcode" placeholder="Zipcode" onChange={this.handleChange}/>    
+                                <Label htmlFor="donorZipcode">Zipcode</Label>
+                                <Input type="text" name="donorZipcode" id="donorZipcode" placeholder="Zipcode" onChange={this.handleChange}/>    
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
-                                <Label htmlFor="donorstate">State </Label>
-                                <Input type="text" name="donorstate" id="donorstate" placeholder="State" onChange={this.handleChange}/>
+                                <Label htmlFor="donorState">State </Label>
+                                <Input type="text" name="donorState" id="donorState" placeholder="State" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                         <Col md={3}>
                             <FormGroup>
-                                <Label htmlFor="donorcountry">Country</Label>
-                                <Input type="text" name="donorcountry" id="donorcountry" placeholder="Country" onChange={this.handleChange}/>    
+                                <Label htmlFor="donorCountry">Country</Label>
+                                <Input type="text" name="donorCountry" id="donorCountry" placeholder="Country" onChange={this.handleChange}/>    
                             </FormGroup>
                         </Col>
                     </Row>
@@ -137,76 +126,76 @@ class DonorForm extends Component{
                         <Col md={4}>
                             <FormGroup>
                                 <Label htmlFor="donorBG">Blood Group</Label>
-                                <Input type="select" name="donorBG" onChange={this.handleChange}>
-                                    <option>A+</option>
-                                    <option>A-</option>
-                                    <option>B+</option>
-                                    <option>B-</option>
-                                    <option>AB+</option>
-                                    <option>AB-</option>
-                                    <option>O+</option>
-                                    <option>O-</option>
+                                <Input type="select" name="donorBG" id="donorBG" onChange={this.handleChange}>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value= "B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
                                 </Input>
                             </FormGroup>
                         </Col>
                         <Col md={4}>
                             <FormGroup>
-                                <Label htmlFor="donorage">Age</Label>
-                                <Input type="text" name="donorage" id="donorage" placeholder="Age" onChange={this.handleChange}/>                                
+                                <Label htmlFor="donorAge">Age</Label>
+                                <Input type="text" name="donorAge" id="donorAge" placeholder="Age" onChange={this.handleChange}/>                                
                             </FormGroup>
                         </Col>
                         <Col md={4}>
                             <FormGroup>
-                                <Label htmlFor="donorweight">Weight</Label>
-                                <Input type="text" name="donorweight" id="donorweight" placeholder="Weight" onChange={this.handleChange}/>
+                                <Label htmlFor="donorWeight">Weight</Label>
+                                <Input type="text" name="donorWeight" id="donorWeight" placeholder="Weight" onChange={this.handleChange}/>
                             </FormGroup>
                         </Col>
                     </Row> 
 
-                    <FormGroup row>
-                        <Label htmlFor="donorgender" md={2}>Gender</Label> 
-                        <Col md={2}>
-                                <Label check>
-                                    <Input type="radio" name="donorgender" id="male" value="male" />{' '} 
-                                   <span style={{margin: '30px'}}>  Male </span>
-                                </Label>
-                        </Col>   
-                        <Col md={2}>
-                                <Label check>
-                                    <Input type="radio" name="donorgender" id="female" value="female" onChange={this.handleChange}/> {' '}
-                                   <span style={{margin: '30px'}}> Female </span>
-                                </Label>
-                        </Col>
-                        <Col md={2}>
-                                <Label check>
-                                    <Input type="radio" name="donorgender" id="other" value="other" onChange={this.handleChange}/> {' '}
-                                    <span style={{margin: '30px'}}>Other</span>
-                                </Label>
-                        </Col>
-                    </FormGroup>
+                    <FormGroup row onChange={this.handleChange}>
+                            <Label htmlFor="donorGender" md={2}>Gender</Label> 
+                            <Col md={2}>
+                                    <Label check>
+                                        <Input type="radio" name="donorGender" id="donorGender" value="Male" />{' '} 
+                                       <span style={{margin: '30px'}}>  Male </span>
+                                    </Label>
+                            </Col>   
+                            <Col md={2}>
+                                    <Label check>
+                                        <Input type="radio" name="donorGender" id="donorGender" value="Female" /> {' '}
+                                       <span style={{margin: '30px'}}> Female </span>
+                                    </Label>
+                            </Col>
+                            <Col md={4}>
+                                    <Label check>
+                                        <Input type="radio" name="donorGender" id="donorGender" value="Other"/> {' '}
+                                        <span style={{margin: '30px'}}>Prefer Not to say</span>
+                                    </Label>
+                            </Col>
+                        </FormGroup>
 
                     <FormGroup>
                         <Label htmlFor="donorMH">Medical History</Label>
-                        <Input type="select" name="donorMH" aria-multiselectable className="inputscroll" onChange={this.handleChange}>
-                            <option>None</option>
-                            <option>Anaemia, including haematinic (iron, B12 and folate) deficiency</option>
-                            <option>Blood Pressure</option>
-                            <option>Coagulation disorders, including haemophilia A and B</option>
-                            <option>Cardiovascular disease</option>
-                            <option>Diabetes</option>
-                            <option>Gastrointestinal Disease</option>
-                            <option>Hypertension</option>
-                            <option>Hepatitis B virus (HBV)</option>
-                            <option>Hepatitis C virus (HCV)</option>
-                            <option>Human Immunodeficiency virus Types 1 and 2 (HIV)</option>
-                            <option>Human T-Lymphotropic Virus Types I and II (HTLV)</option>
-                            <option>Immunological Disease</option>
-                            <option>Central Nervous System Disease</option>
-                            <option>Respiratory diseases, including asthama</option>
-                            <option>Thyroid</option>
-                            <option>Treponema pallidum (syphilis)</option>
-                            <option>West Nile virus (WNV)</option>
-                            <option>Zika Virus (ZIKV)</option>
+                        <Input type="select" name="donorMH" id="donorMH" className="inputscroll" onChange={this.handleChange}>
+                            <option value="None">None</option>
+                            <option value="Anaemia, including haematinic (iron, B12 and folate) deficiency">Anaemia, including haematinic (iron, B12 and folate) deficiency</option>
+                            <option value="Blood Pressure">Blood Pressure</option>
+                            <option value="Coagulation disorders, including haemophilia A and B">Coagulation disorders, including haemophilia A and B</option>
+                            <option value="Cardiovascular disease">Cardiovascular disease</option>
+                            <option value="Diabetes">Diabetes</option>
+                            <option value="Gastrointestinal Disease">Gastrointestinal Disease</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Hepatitis B virus (HBV)">Hepatitis B virus (HBV)</option>
+                            <option value="Hepatitis C virus (HCV)">Hepatitis C virus (HCV)</option>
+                            <option value="Human Immunodeficiency virus Types 1 and 2 (HIV)">Human Immunodeficiency virus Types 1 and 2 (HIV)</option>
+                            <option value="Human T-Lymphotropic Virus Types I and II (HTLV)">Human T-Lymphotropic Virus Types I and II (HTLV)</option>
+                            <option value="Immunological Disease">Immunological Disease</option>
+                            <option value="Central Nervous System Disease">Central Nervous System Disease</option>
+                            <option value="Respiratory diseases, including asthama">Respiratory diseases, including asthama</option>
+                            <option value="Thyroid">Thyroid</option>
+                            <option value="Treponema pallidum (syphilis)">Treponema pallidum (syphilis)</option>
+                            <option value="West Nile virus (WNV)">West Nile virus (WNV)</option>
+                            <option value="Zika Virus (ZIKV)">Zika Virus (ZIKV)</option>
                             <option>Other</option>
                         </Input>
 
@@ -219,16 +208,16 @@ class DonorForm extends Component{
                     </FormGroup>
 
                     <FormGroup row>
-                        <Label htmlFor="donordonated" md={5}>Have you ever donated blood/plasma?</Label> 
+                        <Label htmlFor="donorDonated" md={5}>Have you ever donated blood/plasma?</Label> 
                         <Col md={2}>
                                 <Label check>
-                                    <Input type="radio" name="donordonated" id="yes" value="yes" />{' '} 
+                                    <Input type="radio" name="donorDonated" id="donorDonated" value="yes" />{' '} 
                                    <span style={{margin: '30px'}}>  Yes </span>
                                 </Label>
                         </Col>   
                         <Col md={2}>
                                 <Label check>
-                                    <Input type="radio" name="donordonated" id="no" value="no" /> {' '}
+                                    <Input type="radio" name="donorDonated" id="donorDonated" value="no" /> {' '}
                                    <span style={{margin: '30px'}}> No </span>
                                 </Label>
                         </Col>
@@ -259,4 +248,10 @@ class DonorForm extends Component{
     }
 }
 
-export default DonorForm;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addDonor : (donor) => dispatch(addDonor(donor))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(DonorForm);

@@ -10,19 +10,16 @@ export const Auth = (state = initialState, action) => {
             ...state,
             authError: null
          }
-         break;
 
       case 'LOGIN_ERROR':
          return{
             ...state,
             authError: 'Login Failed!'
          }
-         break;
 
       case 'SIGNOUT_SUCCESSFUL':
          console.log('Logged Out Successfully!')
          return state
-         break;
          
       default:
          return state
