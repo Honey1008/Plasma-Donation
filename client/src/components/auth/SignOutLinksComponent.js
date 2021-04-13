@@ -12,10 +12,6 @@ function SignOutLinks (props) {
                             </DropdownToggle>
                             
                             <DropdownMenu style={{backgroundColor: "#171E45"}}>
-                                <DropdownItem  style={{backgroundColor: "#171E45"}} tag="a" href="/hospitalform" active>
-                                <strong>Join as Hospital</strong>
-                                </DropdownItem>
-                                <DropdownItem divider/>
                                 <DropdownItem style={{backgroundColor: "#171E45"}} tag="a" href="/seekerform" active>
                                 <strong>Join as Seeker</strong>
                                 </DropdownItem>

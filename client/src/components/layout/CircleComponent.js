@@ -4,7 +4,7 @@ function Circle(props) {
    
     var circleStyle = {
       padding: '10',
-      margin: '50px 60px',
+      margin: '50px 38px',
       display:"inline-block",
       backgroundColor: '#0F152E',
       borderRadius: "50%",
@@ -46,9 +46,10 @@ function Circle(props) {
                 <a href="/donors" style={linkStyle}>Total Donors</a></h5>
             </div>
             <div style={circleStyle}>
-                <h2 style={headingStyle}> <a href="/hospitals" style={linkStyle}> 0 </a> </h2> 
+                <h2 style={headingStyle}> <a href="/transfusions" style={linkStyle}> 0 </a> </h2> 
                 <br />
-                <h5 style={{color: 'white',textAlign: 'center'}}><a href="/hospitals" style={linkStyle}>Total Transfusions</a></h5>
+                <h5 style={{color: 'white',textAlign: 'center'}}><a href="/transfusions" style={linkStyle}>
+                    Total Transfusions</a></h5>
             </div>
      </>
     );

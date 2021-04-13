@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardTitle, CardSubtitle, CardDeck, Button, CardText } from 'reactstrap';
+import { Card, CardBody, CardTitle, CardSubtitle, CardDeck, Button, CardText,Spinner } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -8,8 +8,34 @@ import { removeSeeker } from '../../redux/actions/seekerAction';
 import SeekerProfile from '../pools/SeekerProfileComponent';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
+import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
+import '../../styles/ListEntities.css';
 
-class SeekerPool extends Component {    
+function SeekerPool({seekers, removeSeeker}) {
+    return(
+        <div className="container">
+            <div className="row">
+                <br />
+                <br />
+                {seekers? 
+                seekers.map(seeker => 
+                    <div key={seeker.id} className="col-12 col-md-12 offset-md-1 m-3">
+                    <CardDeck>
+                        <RenderSeeker seeker={seeker} removeSeeker={removeSeeker}/>
+                    </CardDeck>                    
+                     </div>)
+                : null} 
+        </div>
+    </div>     
+    )
+}
+
+class RenderSeeker extends Component {    
+
+    state = {
+        loading: false,
+        errorMessage : ''
+    }
     
     handleViewProfile = (seeker) => {
         return(
@@ -21,72 +47,76 @@ class SeekerPool extends Component {
 
     handleValidateSeeker = async(ethSeeker) => {
         // prevent.default(); 
-        const accounts = await web3.eth.getAccounts();
-        
-        await instance.methods.validateSeeker(ethSeeker)
-        .send({from : accounts[0], gas: '1000000'});
+        this.setState({loading: true, errorMessage: ''});
+        try{
+            const accounts = await web3.eth.getAccounts();
+            
+            await instance.methods.validateSeeker(ethSeeker)
+            .send({from : accounts[0], gas: '1000000'});
+        }catch(err){
+            this.setState({ errorMessage: err.message });
+        }
+           
+        this.setState({loading: false});   
     }
     
     handleRemoveSeeker = async(seeker) => {
-        const accounts = await web3.eth.getAccounts();
-        await instance.methods.removeSeeker(seeker.ethSeeker)
-        .send({from: accounts[0], gas: '1000000'});
-        this.props.removeSeeker(seeker.id);
-    } 
+        this.setState({loading: true, errorMessage: ''});
+        try{
+            const accounts = await web3.eth.getAccounts();
+            await instance.methods.removeSeeker(seeker.ethSeeker)
+            .send({from: accounts[0], gas: '1000000'});
+            this.props.removeSeeker(seeker.id);
+            }catch (err) {
+                this.setState({ errorMessage: err.message });
+            }
+        this.setState({loading: false});    
+     } 
 
     render(){
-        const {seekers, removeSeeker} = this.props;
+        const {seeker} = this.props;
         return(
-        <div className="container">
-            <div className="row">
-                <br />
-                <br />
-            {seekers? 
-                seekers.map(seeker => {
-                return(
-                    <div key={seeker.id} className="col-12 col-md-12 offset-md-1 m-3">
-                     <CardDeck>
-                        <Card>
-                            <CardBody>       
-                            <CardTitle tag="h5">
-                                <img src="assets/images/search.png" alt="" width="20px" height="20px"/> {' '}
+            <>
+                <Card>
+                    <CardBody>       
+                        <CardTitle tag="h5">
+                           <img src="assets/images/search.png" alt="" width="20px" height="20px"/> {' '}
                              &nbsp;&nbsp;
-                              {seeker.seekerFname+ " " + seeker.seekerLname}
-                            </CardTitle>
-                            <hr />
-                                <CardSubtitle tag="h6" className="mb-2 text-muted">
-                                    <img src="assets/images/Ethereum.png" alt="" width="20px" height="20px"/> {' '}
-                                    &nbsp;&nbsp;
-                                    {seeker.ethSeeker}
-                                </CardSubtitle>
-                                <CardText>{seeker.seekerDescription}</CardText> 
-                                <div className="text-right">
-                                    <Button style={{backgroundColor: '#171E45',padding: '10px'}}
-                                     onClick={()=>{this.handleRemoveSeeker(seeker)}}>
-                                        Remove
-                                    </Button>
-                                    &nbsp;&nbsp;&nbsp; 
-                                    <Button style={{backgroundColor: '#171E45',padding: '10px'}}
-                                     onClick={()=>{this.handleValidateSeeker(seeker.ethSeeker)}}>
-                                        Validate
-                                    </Button>
-                                    &nbsp;&nbsp;&nbsp; 
-                                <Link to={`/seekers/${seeker.id}`}>
-                                    <Button style={{backgroundColor: '#171E45',padding: '10px'}} onClick={({seeker})=>{this.handleViewProfile({seeker})}}>
-                                        View Profile
-                                    </Button>
-                                </Link>  
-                                </div>  
-                            </CardBody>  
-                        </Card>
-                    </CardDeck>                    
-                </div>
-                );  
-            })
-            : <p>Please wait, fetching data...</p>} 
-        </div>
-        </div>
-        );
+                            {seeker.seekerFname+ " " + seeker.seekerLname}
+                        </CardTitle>
+                        <hr />
+                        <CardSubtitle tag="h6" className="mb-2 text-muted">
+                        <img src="assets/images/Ethereum.png" alt="" width="20px" height="20px"/> {' '}
+                         &nbsp;&nbsp;
+                        {seeker.ethSeeker}
+                        </CardSubtitle>
+                        <CardText>{seeker.seekerDescription}</CardText> 
+                          <div className="text-right">
+                            <Button className="btn-click"
+                                onClick={()=>{this.handleRemoveSeeker(seeker)}}>
+                                {this.state.loading? <Spinner color="light"/> : <span>Remove</span>  } 
+                            </Button>
+                            &nbsp;&nbsp;&nbsp; 
+                            <Button className="btn-click"
+                            onClick={()=>{this.handleValidateSeeker(seeker.ethSeeker)}}>
+                                Validate
+                            </Button>
+                            &nbsp;&nbsp;&nbsp; 
+                             <Link to={`/seekers/${seeker.id}`}>
+                            <Button className="btn-click" 
+                            onClick={({seeker})=>{this.handleViewProfile({seeker})}}>
+                                View Profile
+                            </Button>
+                            </Link>  
+                            </div> 
+                            <CardText>
+                                <br />
+                                <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
+                            </CardText> 
+                        </CardBody>      
+                </Card>
+                </>
+            );  
     } 
 }
 

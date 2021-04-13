@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { addSeeker } from '../../redux/actions/seekerAction';
-import {Form, FormGroup, Input, Label,Col, Button, Row} from 'reactstrap';
+import {Form, FormGroup, Input, Label,Col, Button, Row, Spinner} from 'reactstrap';
 import '../../styles/FormComponent.css';
+import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
 import { sha256 } from 'js-sha256';
@@ -25,27 +26,59 @@ class SeekerForm extends Component{
         seekerAge : 0, 
         seekerWeight : 0,
         seekerDescription : '',
-        seekerHospital : ''
+        seekerHospital : '',
+        errorMessage : '',
+        loading : false
     }
 
     handleSeekerRegister = async(event) => {
         event.preventDefault();  
+
+        this.setState({loading: true, errorMessage: ''});
+
         const accounts = await web3.eth.getAccounts();
         const currentUser =  accounts[0];
         this.setState({
             ethSeeker : currentUser
         });
+
         const dataString = this.state.ethSeeker+this.state.seekerFname+this.state.seekerLname+this.state.seekerNum+ this.state.seekerEmail+ this.state.seekerAddress
                             +this.state.seekerCity+this.state.seekerZipcode+this.state.seekerState+this.state.seekerCountry+this.state.seekerBG
                             +this.state.seekerAge+this.state.seekerWeight+ this.state.seekerGender+
                             this.state.seekerHospital;
         dataString.replace(/\s+/g, '');
-        console.log(dataString);
         const hashOfSeekerData = sha256(dataString);
-        await instance.methods
-        .addSeeker(hashOfSeekerData, this.state.seekerHospital)
-        .send({from: accounts[0], gas: '1000000'});     
-        this.props.addSeeker(this.state);
+
+        try{
+            await instance.methods
+            .addSeeker(hashOfSeekerData, this.state.seekerHospital)
+            .send({from: accounts[0]});     
+            this.props.addSeeker({
+                ethSeeker : this.state.ethSeeker,
+                seekerFname : this.state.seekerFname,
+                seekerLname : this.state.seekerLname,
+                seekerNum : this.state.seekerNum,
+                seekerEmail : this.state.seekerEmail,
+                seekerAddress : this.state.seekerAddress,
+                seekerCity : this.state.seekerCity,
+                seekerZipcode : this.state.seekerZipcode,
+                seekerState : this.state.seekerState,
+                seekerCountry : this.state.seekerCountry,
+                seekerBG : this.state.seekerBG,
+                seekerGender : this.state.seekerGender,
+                seekerAge : this.state.seekerAge, 
+                seekerWeight : this.state.seekerWeight,
+                seekerDescription : this.state.seekerDescription,
+                seekerHospital : this.state.seekerHospital
+            });
+
+         this.props.history.push('/home');
+         
+        } catch(err){
+            this.setState({ errorMessage: err.message });
+        }
+
+        this.setState({loading: false});       
     }
 
     handleChange = (event) => {
@@ -187,16 +220,17 @@ class SeekerForm extends Component{
                             placeholder="Enter the ethereum address of the hospital that you are currently being treated."
                             onChange={this.handleChange}/>
                         </FormGroup>
-     
                        
-                        <br />
                         <FormGroup row style={{justifyContent:"center"}}>
                             <Button type="submit" className="submit-form">
-                                <strong>Register</strong> 
+                            {this.state.loading ? <Spinner color="light"/> : <strong>Register</strong>} 
                             </Button>
                         </FormGroup>
                     </Form>
                 </div> 
+                <br />
+                    <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
+                <br />
             </div>
             );
     }

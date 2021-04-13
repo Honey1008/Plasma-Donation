@@ -287,9 +287,8 @@ contract PlasmaDonation {
 
         TransfusionState memory newTransfusion =
             TransfusionState({
-                indexOfTransfusion: transfusions.length,
-                ethSeeker: //As the plasma is not transfused yet, initializing seekers address.
-                0x0000000000000000000000000000000000000000,
+                indexOfTransfusion: transfusions.length, //As the plasma is not transfused yet, initializing seekers address.
+                ethSeeker: 0x0000000000000000000000000000000000000000,
                 ethDonor: _ethDonor,
                 ethHospital: msg.sender,
                 stateOfTransfusion: status.requestInitiated,

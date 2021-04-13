@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardImg, CardBody, CardTitle, CardFooter} from 'reactstrap';
+import { Card, CardImg, CardFooter} from 'reactstrap';
 import { ListGroup, ListGroupItem } from 'reactstrap'; 
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';

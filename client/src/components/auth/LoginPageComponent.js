@@ -2,23 +2,24 @@ import React, { Component } from 'react';
 import { Form, FormGroup,Label,Col,Input,Button} from "reactstrap";
 import { connect } from 'react-redux';
 import { signIn } from '../../redux/actions/authAction';
+import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 
 class LoginPage extends Component {
     state = {
         email : '',
         password : ''
     }
-    handleChange = (e) => {
+    handleChange = (event) => {
         this.setState({
-            [e.target.id]: e.target.value
+            [event.target.id]: event.target.value
         })
     }
 
-    handleLogin = (e) => {
-        e.preventDefault();
+    handleLogin = (event) => {
+        event.preventDefault();
         this.props.signIn(this.state);
     }
-
+   
     render() {
         const { authError } = this.props;
         return (
@@ -57,11 +58,10 @@ class LoginPage extends Component {
                         <FormGroup row style={{justifyContent:"center"}}>
                             <Button type="submit" className="submit-form">Login</Button>
                         </FormGroup>
-
-                        <div style={{color: 'red', textAlign: 'center' }}>
-                          { authError ? <p>{authError}</p>: null}
-                        </div>
-                       
+                        {authError? 
+                         <PrintErrorMsg isError={!!authError} errorMsg={authError}/>:
+                         null}
+                        
                     </Form>   
                 </div>  
             </div>

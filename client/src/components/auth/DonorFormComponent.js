@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {addDonor} from '../../redux/actions/donorAction';
-import {Form, FormGroup, Input, Label,Col, Button, Row} from 'reactstrap';
+import {Form, FormGroup, Input, Label,Col, Button, Row, Spinner} from 'reactstrap';
 import '../../styles/FormComponent.css';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
 import { sha256 } from 'js-sha256';
+import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 
 class DonorForm extends Component{
 
@@ -26,17 +27,20 @@ class DonorForm extends Component{
         donorWeight : 0,
         donorMH : 'None',
         donorDonated : 'No',
-        donorDonatedOn : ''
+        donorDonatedOn : '',
+        errorMessage : '',
+        loading : false
     }
     
     handleChange = (event) => {
         this.setState({
             [event.target.id]: event.target.value
-        })
+        }) 
     }
 
     handleDonorRegister = async(event) => {
         event.preventDefault();  
+        this.setState({loading: true, errorMessage: ''});
         const accounts = await web3.eth.getAccounts();
         const currentUser =  accounts[0];
         this.setState({
@@ -47,10 +51,33 @@ class DonorForm extends Component{
                             +this.state.donorAge+this.state.donorWeight+ this.state.donorGender+this.state.donorMH + this.state.donordescription;
         dataString.replace(/\s+/g, '');
         const hashOfDonorData = sha256(dataString);
-        await instance.methods
-        .addDonor(hashOfDonorData)
-        .send({from: accounts[0], gas: '1000000'});     
-        this.props.addDonor(this.state);  
+        try{
+            await instance.methods.addDonor(hashOfDonorData).send({from: accounts[0]});     
+                
+                this.props.addDonor({
+                    ethDonor : this.state.ethDonor,
+                    donorFname : this.state.donorFname,
+                    donorLname : this.state.donorLname,
+                    donorNum : this.state.donorNum,
+                    donorEmail : this.state.donorEmail,
+                    donorAddress : this.state.donorAddress,
+                    donorCity : this.state.donorCity,
+                    donorZipcode : this.state.donorZipcode,
+                    donorState : this.state.donorState,
+                    donorCountry : this.state.donorCountry,
+                    donorBG : this.state.donorBG,
+                    donorGender : this.state.donorGender,
+                    donorAge : this.state.donorAge, 
+                    donorWeight : this.state.donorWeight,
+                    donorMH : this.state.donorMH,
+                    donorDonated : this.state.donorDonated,
+                    donorDonatedOn : this.state.donorDonatedOn
+                });
+            this.props.history.push('/home');
+        }catch(err){
+            this.setState({ errorMessage: err.message });
+        }
+        this.setState({loading: false}); 
     }
 
     render(){
@@ -233,16 +260,16 @@ class DonorForm extends Component{
                          onChange={this.handleChange}
                         />
                     </FormGroup>                  
-                        
-                     <br />
-
                     <FormGroup row style={{justifyContent:"center"}}>
                         <Button type="submit" className="submit-form">
-                            <strong>Register</strong> 
+                        {this.state.loading? <Spinner color="light"/> : <strong>Register</strong> }   
                         </Button>
                     </FormGroup>
                     </Form>
                 </div>
+                <br />
+                 <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
+                <br />
             </div>
         );
     }

@@ -13,10 +13,12 @@ import SeekerForm from './auth/SeekerFormComponent';
 import DonorForm from './auth/DonorFormComponent';
 import SeekerProfile from './pools/SeekerProfileComponent';
 import DonorProfile from './pools/DonorProfileComponent';
+import TransfusionPool from './pools/TransfusionsPoolComponent';
 import Contact from './layout/ContactComponent';
-import Dashboard from './dashboard/DashBoardComponent';
+import PlasmaManagerDashboard from './dashboard/PlasmaManagerDashboard';
 import AboutUs from './layout/AboutUsComponent';
 import LoginPage from './auth/LoginPageComponent';
+import HospitalDashboard from './dashboard/HospitalDashboard';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form'
@@ -83,12 +85,14 @@ class Main extends Component {
         <Route path="/seekers/:id" component={SeekerProfile} />
         <Route exact path ="/donors" component={DonorPool} />
         <Route path="/donors/:id" component={DonorProfile} />
+        <Route path="/transfusions" component={TransfusionPool}/>
         <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
         <Route path ="/hospitalform" component={HospitalForm} />
         <Route path="/seekerform" component={SeekerForm} />
         <Route path="/donorform" component={DonorForm} />
         <Route path ="/login" component={LoginPage} />
-        <Route path="/myprofile" component={Dashboard} />
+        <Route path="/myprofile" component={PlasmaManagerDashboard} />
+        <Route path="/hospitaldashboard" component={HospitalDashboard} />
         <Route path="/aboutus" component={AboutUs} />
         <Redirect to="/home" />
       </Switch>  

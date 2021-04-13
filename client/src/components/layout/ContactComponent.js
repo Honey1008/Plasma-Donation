@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button, Label, Col, Row} from 'reactstrap';
 import { Control, Form, Errors } from 'react-redux-form';
+import MapComponent from './MapComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -16,36 +17,60 @@ class Contact extends Component {
 
     handleSubmit(values) {
         console.log("Current state is :" + JSON.stringify(values));
-        alert("Current state is :" + JSON.stringify(values));
+        // alert("Current state is :" + JSON.stringify(values));
+        alert("Feedback recieved thank you for providing your valuable time....!!! See you around ;)");
         this.props.resetFeedbackForm();
     }
-
+    
     render(){
         return(
             <div className="container">
-                <div className="row row-content">
-                    <div className="col-12">
-                    <h3>Location Information</h3>
-                    </div>
-                    <div className="col-12 col-sm-4 offset-sm-1">
-                            <h5>Our Address</h5>
-                            <address>
-                            50-Tulsi Tenament,<br />
-                            Near ITI, Jafarabad, Godhra<br />
-                            Gujarat, India <br />
-                            </address>
-                            <i className="fa fa-phone fa-lg"></i> (+91) 9106595511 <br />
-                            <i className="fa fa-envelope fa-lg"></i> <a href="mailto:genesis@plasma.com">genesis@plasma.com</a>
-                    </div>
-                    <div className="col-12 col-sm-6">
+                <div className="row" >
+                    <div className="col-12 col-md-5" style={{marginTop: '30px'}}>
+                            <h5>
+                                <img src="/assets/images/location.png" alt="" width="30px" height="30px"/>
+                                &nbsp; &nbsp; Our Address
+                            </h5>
+                            <hr />
+                                <address style={{fontSize: '15px'}}>
+                                        Government Engineering College,<br />
+                                        Sector 28, Gadhinagar - 382028, <br />
+                                        Gujarat, India <br />
+                                 </address>
+                                <i className="fa fa-phone fa-lg"></i> (+91) 9106595511 <br />
+                                <i className="fa fa-envelope fa-lg"></i> <a href="mailto:genesis@plasma.com">genesis@plasma.com</a>
+                           
+                            <br />
+                            <br />
+                                <h5>
+                                    Find Us At
+                                </h5>
+                            <hr />
+                                <a className="btn btn-social-icon" href="http://www.instagram.com/profile.php?id="><i className="fa fa-instagram"> </i></a>
+                                <a className="btn btn-social-icon" href="http://www.facebook.com/profile.php?id="><i className="fa fa-facebook" > </i></a>
+                                <a className="btn btn-social-icon" href="http://www.linkedin.com/in/"><i className="fa fa-linkedin" > </i></a>
+                                <a className="btn btn-social-icon" href="http://twitter.com/"><i className="fa fa-twitter" > </i></a>
+                                <a className="btn btn-social-icon" href="http://youtube.com/"><i className="fa fa-youtube" > </i></a>
+                       </div>
+                    <div className="col-12 col-md-6 offset-1" style={{marginTop: '30px'}}>
                         <h5>Map of our Location</h5>
+                        <hr />
+                        <div style={{marginLeft:'70px'}}>
+                            <MapComponent />
+                        </div>
                     </div>
                 </div>
-                <div className="row row-content">
-                    <div className="col-12">
-                        <h3> We would appreciate to recieve a Feedback :) </h3> <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div className="row" style={{margin: '0px 100px 0px 100px',
+                padding: '50px 0px 20px 0px',
+                border: '1px solid #f1f1f1',borderRadius: '10px'}}>
+                    <div className="col-12" style={{marginLeft: '80px'}}>
+                        <h2 style={{fontFamily: 'serif'}}> We would appreciate to recieve a Feedback :) </h2> <br />
                     </div>
-                        <div className="col-12 col-md-9">
+                        <div className="col-12 col-md-10 offset-1">
                             <Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
                                 <Row className="form-group">
                                     <Label htmlFor="firstname" md={2}>First Name</Label>
@@ -133,7 +158,7 @@ class Contact extends Component {
                                 </Row>
 
                                 <Row className="form-group">
-                                    <Col md={{size: 6, offset: 2}}>
+                                    <Col md={{size: 7, offset: 2}}>
                                         <div className="form-check">
                                             <Label check>
                                                 <Control.checkbox model=".agree" name="agree"
@@ -143,7 +168,7 @@ class Contact extends Component {
                                             </Label>
                                         </div>
                                     </Col>
-                                    <Col md={{size: 3, offset: 1}}>
+                                    <Col md={{size: 3}}>
                                         <Control.select model=".contactType" name="contactType"
                                             className="form-control">
                                                 <option>Phone Number</option>
@@ -152,16 +177,18 @@ class Contact extends Component {
                                     </Col>
                                 </Row>
                                 <Row className="form-group">
-                                    <Label htmlFor="message" md={2}>Your Feedback</Label>
+                                    <Label htmlFor="message" md={2}>Feedback</Label>
                                     <Col md={10}>
                                         <Control.textarea model=".message" id="message" name="message"
-                                               rows="12" className="form-control"/>
+                                            rows="12" className="form-control"/>
                                     </Col>
                                 </Row>
+                                <br />
                                 <Row className="form-group">
                                     <Col md={{size: 10,offset:2}}>
-                                        <Button type="submit" style={{backgroundColor: "#171E45"}}>
-                                            Send Feedback
+                                        <Button type="submit" style={{backgroundColor: "#171e45", color:'white',
+                                        padding:'10px 20px',fontSize: '16px'}}>
+                                          Send Feedback
                                          </Button>
                                     </Col>   
                                 </Row>

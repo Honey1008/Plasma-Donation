@@ -1,0 +1,12 @@
+.btn-click {
+	background-color: #171e45;
+	color: floralwhite;
+	border: none;
+	padding: 10px 20px;
+	font-family: sans-serif;
+}
+
+.btn-click:hover {
+	background-color: #afbae4;
+	color: black;
+}

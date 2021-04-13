@@ -19,7 +19,8 @@ class HospitalForm extends Component {
         hospitalCity: '',
         hospitalState: '',
         hospitalCountry: '',   
-        errorMessage : ''
+        errorMessage : '',
+        loading : false
     }
  
     handleChange = (event) => {
@@ -30,12 +31,16 @@ class HospitalForm extends Component {
    
     handleHospitalRegister = async (event) => {
         event.preventDefault();  
+
+        this.setState({loading: true, errorMessage: ''});
+
         const dataString = this.state.hospitalName+this.state.hospitalEmail
-        +this.state.hospitalContact+this.state.hospitalAddress
-        +this.state.hospitalCity+this.state.hospitalState
-        +this.state.hospitalCountry;
+                                +this.state.hospitalContact+this.state.hospitalAddress
+                                +this.state.hospitalCity+this.state.hospitalState
+                                +this.state.hospitalCountry;
+
         dataString.replace(/\s+/g, '');
-        var hashOfHospitalData = sha256(dataString);
+        const hashOfHospitalData = sha256(dataString);
        
         try{
                 const accounts = await web3.eth.getAccounts();
@@ -54,15 +59,13 @@ class HospitalForm extends Component {
                     hospitalAddress: this.state.hospitalAddress,
                     hospitalCity: this.state.hospitalCity,
                     hospitalState: this.state.hospitalState,
-                    hospitalCountry: this.state.hospitalCountry
+                    hospitalCountry: this.state.hospitalCountry   
                 });
-                this.setState({
-                    errorMessage : ''
-                })
-
+            this.props.history.push('/myprofile');
         } catch (err) {
-                this.setState({ errorMessage: err.message });
+            this.setState({ errorMessage: err.message });
         }
+        this.setState({loading: false});    
     }
 
     render(){
@@ -129,15 +132,18 @@ class HospitalForm extends Component {
                             onChange={this.handleChange}/>
                         </Col>
                     </FormGroup>
-                    <br />
+                  
                     <FormGroup row style={{justifyContent:"center"}}>
                         <Button type="submit" className="submit-form">
-                            <strong>Register</strong> 
+                          {this.state.loading? <Spinner color="light"/> : <strong>Register</strong> }  
                         </Button>
                     </FormGroup>
-                    <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
+                   
                 </Form>
             </div>
+            <br />
+                 <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
+            <br />
         </div>
         );  
     }

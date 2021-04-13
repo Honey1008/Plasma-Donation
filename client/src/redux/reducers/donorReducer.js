@@ -13,6 +13,7 @@ export const Donors = (state = initialState, action) => {
             return state;
         case 'REMOVE_DONOR_ERROR':
             console.log('Donor removed error ', action.err);
+            break;
         default:
             return state;
     }

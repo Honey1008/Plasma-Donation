@@ -14,14 +14,14 @@ function Footer(props) {
                             <ul className="list-unstyled">
                                 <li><Link className="link-content" to="/home">Home</Link></li>
                                 <li><Link className="link-content" to="/aboutus">About Us</Link></li>
-                                <li><Link className="link-content" to="/plasmamanager">Plasma Manager</Link></li>
+                                <li><Link className="link-content" to="/transfusions">Transfusions</Link></li>
                                 <li><Link className="link-content" to="/contactus">Contact Us</Link></li>
                             </ul>
                         </div>
                         <div className="col-md-3 col-sm-4 mr-auto">
                             <h5 className="heading-footer">VIEW ENTITIES</h5>
                             <ul className="list-unstyled">
-                                <li><Link className="link-content" to="/plasmamanager">Plasma Center</Link></li>
+                                <li><Link className="link-content" to="/myprofile">Plasma Center</Link></li>
                                 <li><Link className="link-content" to="/hospitals">Hospitals</Link></li>
                                 <li><Link className="link-content" to="/seekers">Seekers</Link></li>
                                 <li><Link className="link-content" to="/donors">Donors</Link></li>   
@@ -30,9 +30,9 @@ function Footer(props) {
                         <div className="col-md-3 col-sm-4 ml-auto">
                             <h5 className="heading-footer" >ADDRESS</h5>
                             <address>
-                              50- Tulsi Tenament, <br />
-                              Near ITI, Jafarabad<br />
-                              Godhra, Gujarat, India.<br />
+                                Government Engineering College,<br />
+                                Sector 28, Gadhinagar- 382028, <br />
+                                Gujarat, India.<br />
                             </address>  <br />                    
                         </div>   
                         <div className = "col-md-3 col-sm-4 ml-auto">
