@@ -68,7 +68,7 @@ class RenderDonor extends Component {
     render() {
         const {donor} = this.props;
         return(
-                <Card>
+                <Card className="card">
                     <CardBody>
                                 
                      <CardTitle tag="h5">

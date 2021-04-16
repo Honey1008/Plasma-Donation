@@ -52,7 +52,8 @@ class SeekerForm extends Component{
         try{
             await instance.methods
             .addSeeker(hashOfSeekerData, this.state.seekerHospital)
-            .send({from: accounts[0]});     
+            .send({from: accounts[0]});   
+              
             this.props.addSeeker({
                 ethSeeker : this.state.ethSeeker,
                 seekerFname : this.state.seekerFname,

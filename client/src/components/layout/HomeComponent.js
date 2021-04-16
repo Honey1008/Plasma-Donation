@@ -5,15 +5,17 @@ import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
 import '../../styles/HomeComponent.css';
 import Circle from './CircleComponent';
+import {Link} from 'react-router-dom';
 
-class Home extends Component {
+class Home extends Component { 
 
     state = {
         plasmaManager : '',
         contractAddress : null,
         totalSeekers : null,
         totalDonors: null,
-        totalHospitals : null
+        totalHospitals : null,
+        totalTransfusions: null
     }
 
     componentDidMount = async() => {
@@ -28,16 +30,15 @@ class Home extends Component {
             plasmaManager = res;
         });
 
-        const seekers = await instance.methods.viewAllSeekers().call();
-        const donors = await instance.methods.viewAllDonors().call();
-        const hospitals = await instance.methods.viewAllHospitals().call();
-
+        const entities = await instance.methods.viewTotalEntities().call();
+       
         this.setState({
             plasmaManager,
             contractAddress : deployedNetwork.address,
-            totalSeekers : seekers.length,
-            totalDonors : donors.length,
-            totalHospitals : hospitals.length
+            totalSeekers :entities[0],
+            totalDonors : entities[1],
+            totalHospitals : entities[2],
+            totalTransfusions : entities[3]
         })
     }
    
@@ -90,8 +91,8 @@ class Home extends Component {
                         
                             <br />While, the contract is deployed to {this.state.contractAddress} address.
                         </p>                 
-                   </div> */}
-                 {/* </div> */}
+                   </div>
+                 </div> */}
                     <br />
                 <div className="row">
                     <div className="col-7">
@@ -99,7 +100,7 @@ class Home extends Component {
                         <br />
                          <img src="/assets/images/covid19.jpg" alt=""/>
                     </div>
-                    <div className="col-5">
+                    <div className="col-5 col-md-5 col-sm-12">
                         <p style={{fontSize: '18px'}}>
                             Convalescent plasma therapy was the only means of rehabilitation initially
                             when there was no vaccine for COVID-19.
@@ -130,7 +131,8 @@ class Home extends Component {
            
             <Circle totalHospitals={this.state.totalHospitals}
             totalSeekers = {this.state.totalSeekers}
-            totalDonors = {this.state.totalDonors}/>
+            totalDonors = {this.state.totalDonors}
+            totalTransfusions = {this.state.totalTransfusions}/>
         </div> 
 
         </> 

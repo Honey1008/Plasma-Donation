@@ -261,7 +261,7 @@ class AboutUs extends Component {
                 <div className="row" id="plasmamanager">
                     <div className="col-12">
                         <CardDeck>
-                            <Card style={{marginTop: '20px'}}>
+                            <Card style={{marginTop: '20px'}} className="card">
                                 <CardBody>
                                 <CardTitle tag="h5">
                                 <img src="assets/images/manager.png" alt="" width="25px" height="25px"/> {' '}
@@ -286,7 +286,7 @@ class AboutUs extends Component {
                 <div className="row" id="hospital">
                     <div className="col-12">
                         <CardDeck>
-                            <Card style={{marginTop: '20px'}}>
+                            <Card style={{marginTop: '20px'}} className="card">
                                 <CardBody>
                                 <CardTitle tag="h5">
                                 <img src="assets/images/hospitalicon.png" alt="" width="30px" height="30px"/> {' '}
@@ -312,7 +312,7 @@ class AboutUs extends Component {
                 <div className="row" id="seeker">
                     <div className="col-12">
                         <CardDeck>
-                            <Card style={{marginTop: '20px'}}>
+                            <Card style={{marginTop: '20px'}} className="card">
                                 <CardBody>
                                 <CardTitle tag="h5">
                                 <img src="assets/images/search.png" alt="" width="25px" height="25px"/> {' '}
@@ -338,7 +338,7 @@ class AboutUs extends Component {
                 <div className="row" id="donor">
                     <div className="col-12">
                         <CardDeck>
-                            <Card style={{marginTop: '20px'}}>
+                            <Card style={{marginTop: '20px'}} className="card">
                                 <CardBody>
                                     <CardTitle tag="h5">
                                     <img src="assets/images/donors.png" alt="" width="30px" height="35px"/> {' '}

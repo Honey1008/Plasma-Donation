@@ -18,10 +18,10 @@ import Contact from './layout/ContactComponent';
 import PlasmaManagerDashboard from './dashboard/PlasmaManagerDashboard';
 import AboutUs from './layout/AboutUsComponent';
 import LoginPage from './auth/LoginPageComponent';
-import HospitalDashboard from './dashboard/HospitalDashboard';
 import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { actions } from 'react-redux-form'
+import { actions } from 'react-redux-form';
+import TempProgressBar from './TempProgressBar';
 
 const mapDispatchToProps = (dispatch) => ({
   resetFeedbackForm: () => {dispatch(actions.reset('feedback'))}
@@ -77,22 +77,21 @@ class Main extends Component {
       <div>
       <Header />      
       <Switch>
-        <Route path="/home" 
-          component={() => <Home />} />
-
+        <Route path="/home" component={() => <Home />} />
         <Route path="/hospitals" component={HospitalPool} />
         <Route exact path="/seekers" component={SeekerPool} />
         <Route path="/seekers/:id" component={SeekerProfile} />
         <Route exact path ="/donors" component={DonorPool} />
         <Route path="/donors/:id" component={DonorProfile} />
         <Route path="/transfusions" component={TransfusionPool}/>
-        <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+        <Route exact path="/contactus" component={() => 
+        <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
         <Route path ="/hospitalform" component={HospitalForm} />
         <Route path="/seekerform" component={SeekerForm} />
         <Route path="/donorform" component={DonorForm} />
         <Route path ="/login" component={LoginPage} />
         <Route path="/myprofile" component={PlasmaManagerDashboard} />
-        <Route path="/hospitaldashboard" component={HospitalDashboard} />
+        <Route path="/temp" component={TempProgressBar} />
         <Route path="/aboutus" component={AboutUs} />
         <Redirect to="/home" />
       </Switch>  
@@ -101,7 +100,6 @@ class Main extends Component {
       </div>
     );
   }
-  
 }
 
 export default withRouter(connect(null, mapDispatchToProps)(Main));

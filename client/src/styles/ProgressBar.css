@@ -1,0 +1,18 @@
+#myProgress {
+	width: 100%;
+	height: 22px;
+	background-color: #ddd;
+	border: 1px solid #f1f1f1;
+	border-radius: 15px;
+}
+
+#myBar {
+	width: 0%;
+	height: 22px;
+	background-color: #171e45;
+	text-align: center;
+	line-height: 20px;
+	color: white;
+	border: 1px solid #f1f1f1;
+	border-radius: 15px;
+}

@@ -46,7 +46,7 @@ function Circle(props) {
                 <a href="/donors" style={linkStyle}>Total Donors</a></h5>
             </div>
             <div style={circleStyle}>
-                <h2 style={headingStyle}> <a href="/transfusions" style={linkStyle}> 0 </a> </h2> 
+                <h2 style={headingStyle}> <a href="/transfusions" style={linkStyle}> {props.totalTransfusions} </a> </h2> 
                 <br />
                 <h5 style={{color: 'white',textAlign: 'center'}}><a href="/transfusions" style={linkStyle}>
                     Total Transfusions</a></h5>

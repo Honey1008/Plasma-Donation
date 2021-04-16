@@ -365,18 +365,49 @@ contract PlasmaDonation {
         totalCompletedTransfusions++;
     }
 
-    //Obtaining all the addresses of entities added to the system so in the front end.
-    //We can obtain all the data using map functionality.
-    function viewAllSeekers() public view returns (address[] memory) {
-        return totalSeekers;
+    function viewTotalEntities()
+        public
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            totalSeekers.length,
+            totalDonors.length,
+            totalHospitals.length,
+            transfusions.length
+        );
     }
 
-    function viewAllDonors() public view returns (address[] memory) {
-        return totalDonors;
+    function totalTransfusions() public view returns (uint256) {
+        return transfusions.length;
     }
 
-    function viewAllHospitals() public view returns (address[] memory) {
-        return totalHospitals;
+    function getTransfusion(uint256 index)
+        public
+        view
+        returns (
+            uint256,
+            address,
+            address,
+            address, 
+            uint256,
+            string memory,
+            string memory
+        )
+    {
+        return (
+            transfusions[index].indexOfTransfusion,
+            transfusions[index].ethSeeker,
+            transfusions[index].ethDonor,
+            transfusions[index].ethHospital,
+            uint256(transfusions[index].stateOfTransfusion),
+            transfusions[index].storageTime,
+            transfusions[index].updatedOn
+        );
     }
-    /* Note : For viewing all the transfusions just use mapping on the transfusions array*/
 }

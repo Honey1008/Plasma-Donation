@@ -3,6 +3,9 @@
 	margin: auto;
 	margin-bottom: 0%;
 	font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+	left: 0;
+	bottom: 0;
+	width: 100%;
 }
 html {
 	min-height: 100%;

@@ -1,83 +1,110 @@
 import React, { Component } from 'react';
-// import instance from '../../contracts/instance';
-// import web3 from '../../contracts/web3';
-import { CardDeck, Card,CardBody,CardTitle,CardSubtitle
-    ,CardText, Button, Spinner } from 'reactstrap';
+import instance from '../../contracts/instance';
+import web3 from '../../contracts/web3';
+import { CardDeck, Button, Modal, ModalHeader, ModalBody,
+    Form, FormGroup, Input, Label} from 'reactstrap';
 import '../../styles/ListEntities.css';
-import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
+import RenderTransfusion from './RenderTransfusionComponent';
+ 
+class TransfusionPool extends Component{
 
-function TransfusionPool(){
-    return(
-        <div className="container">
-            <div className="row">
-                <br />
-                <br />
-                {/* {transfusions? 
-                transfusions.map(transfusion =>  */}
-                    <div  className="col-12 col-md-12 offset-md-1 m-3">
-                        <CardDeck>
-                            <RenderTransfusion />
-                        </CardDeck>                    
-                     </div>
-                     {/* ) */}
-                {/* : null}  */}
-        </div>
-    </div>     
-    )
-}
-
-class RenderTransfusion extends Component {
-    state = {
-        loading: false,
-        errorMessage : ''
+    state={
+        isModalOpen: false,
+        ethDonor : '',
+        totalTransfusions: '',
+        transfusions : null 
     }
 
-    render() {
-        return (
-             <Card>
-                <CardBody>
-                   <CardTitle tag="h5">
-                       <img src="/assets/images/transfusion.png" 
-                             width="40px" height="40px" alt=""/>&nbsp;
-                             &nbsp; Transfusion Request (index number)
-                   </CardTitle>
-                    <CardSubtitle tag="h6" className="mb-2 text-muted">
-                        Total transfusions in our network
-                    </CardSubtitle>
-                        <hr />
-                    <CardText>
-                        View ongoing transfusions in the network
-                    </CardText>
-                    {/* <Progress /> */}                 
-                    <CardText>
-                        <small className="text-muted">Last updated 3 mins ago</small>
-                    </CardText>
-                    <div className="text-right">
-                        <Button className="btn-click"
-                                // onClick={()=>{this.handleRemoveSeeker(seeker)}}
-                                >
-                                {this.state.loading? <Spinner color="light"/> : <span>Add</span>  } 
-                        </Button>
-                            &nbsp;&nbsp;&nbsp; 
-                        <Button className="btn-click"
-                            // onClick={()=>{this.handleValidateSeeker(seeker.ethSeeker)}}
-                            >
-                                Approve
-                        </Button>
-                            &nbsp;&nbsp;&nbsp; 
-                        <Button className="btn-click" 
-                            // onClick={({seeker})=>{this.handleViewProfile({seeker})}}
-                            >
-                                Complete
-                        </Button>
-                    </div> 
-                    <CardText>
-                            <br />
-                            <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/>
-                     </CardText>
-                </CardBody>        
-             </Card>            
+    componentDidMount = async()=>{
+        const totalTransfusions = await instance.methods.totalTransfusions().call();
+
+        const transfusions = await Promise.all(
+            Array(totalTransfusions)
+            .fill().map((element,index) => {
+             return instance.methods.transfusions(index).call();
+        }));
+
+        this.setState({
+            totalTransfusions,
+            transfusions
+        });
+    }
+  
+    toggleModal = () => {
+        this.setState({
+          isModalOpen: !this.state.isModalOpen
+        });
+    }
+    
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value
+        }) 
+    }
+
+    handleInitiateRequest = async(event) => {
+        this.toggleModal();
+        event.preventDefault();
+        const date = new Date();
+        const dateOfDonation = date.DatetoString();
+        const accounts = await web3.eth.getAccounts();
+        await instance.methods
+        .Donation(this.state.ethDonor,dateOfDonation)
+        .send({from: accounts[0]});
+    }
+  
+    render(){
+        return(
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                    <Button onClick={this.toggleModal}
+                    className="btn-click"
+                    style={{ marginTop:"25px", float:'right'}}>
+                        Initiate New Request
+                    </Button>
+                         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                            <ModalHeader toggle={this.toggleModal}>
+                                 Initiate Donation
+                            </ModalHeader>
+                            <ModalBody>
+                                <Form onSubmit={this.handleInitiateRequest}>
+                                    <FormGroup>
+                                        <Label htmlFor="ethDonor">Ethereum Address of Donor</Label>
+                                            <Input type="text" id="ethDonor" name="ethDonor" 
+                                              placeholder="Enter Ethereum account address of Donor"
+                                              onChange={this.handleChange}
+                                            />
+                                    </FormGroup>
+                                    <Button type="submit" value="submit" className="btn-click"
+                                    style={{ marginTop:"25px", float:'right'}}>
+                                         Enter Donation Phase
+                                    </Button>
+                                </Form>
+                            </ModalBody>
+                         </Modal>     
+                    </div>
+                </div>
+                <div className="row">
+                   
+                    {this.state.transfusions? 
+                    this.state.transfusions.map((transfusion,index) => 
+                        <div className="col-12 col-md-12 offset-md-1 m-3" key={index}>
+                            <CardDeck>
+                                <RenderTransfusion 
+                                key={index}
+                                id={index}
+                                transfusion={transfusion}
+                                />
+                            </CardDeck>                    
+                        </div>
+                        ) 
+                     : null}  
+            </div>
+        </div>     
         )
-    }
+   }
 }
+
+
 export default TransfusionPool;
