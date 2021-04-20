@@ -3,3 +3,13 @@
 	margin: 0px auto;
 	color: black;
 }
+
+blockquote::before {
+	content: open-quote;
+}
+blockquote::after {
+	content: close-quote;
+}
+blockquote {
+	quotes: "“" "”" "‘" "’";
+}

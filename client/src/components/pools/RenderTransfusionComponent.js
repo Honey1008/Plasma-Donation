@@ -71,9 +71,10 @@ class RenderTransfusion extends Component {
     }
 
     toggleModal = () => {
+        this.setState({loading: true, errorMessage: ''});
         this.setState({
           isModalOpen: !this.state.isModalOpen
-        });
+        });   
     }
 
     
@@ -84,6 +85,7 @@ class RenderTransfusion extends Component {
     }
  
     handleApproveRequest = async(event) => {
+        this.setState({loading: true, errorMessage: ''});
         this.toggleModal();
         event.preventDefault();
         try{
@@ -94,15 +96,17 @@ class RenderTransfusion extends Component {
         const storageTime = Math.ceil(difference/(1000*3600*24)).toString();
         console.log(storageTime);
         await instance.methods
-        .Tranfusion(this.props.transfusion.indexOfTransfusion,this.state.ethSeeker, 
+        .Transfusion(this.props.transfusion.indexOfTransfusion,this.state.ethSeeker, 
             currentDate.toString(), storageTime.toString())
         .send({from: accounts[0]});
         this.move();}catch(err){
             this.setState({ errorMessage: err.message });
-        } 
+        }    
+        this.setState({loading: false});    
     }
 
     handleAddRequest = async(index) => {
+        this.setState({loading: true, errorMessage: ''});
         try{
         const date = (new Date()).toString();
         const accounts = await web3.eth.getAccounts();
@@ -118,6 +122,7 @@ class RenderTransfusion extends Component {
     }
 
     handleCompletion = async(index) => {
+        this.setState({loading: true, errorMessage: ''});
         try{
             const date = (new Date()).toString();
             const accounts = await web3.eth.getAccounts();
@@ -250,11 +255,14 @@ class RenderTransfusion extends Component {
                     <CardText>
                         <small className="text-muted">Last updated on ~ {transfusion.updatedOn}</small>
                     </CardText>
+                    <CardText>
+                     <br />
+                     <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/> 
+           
+                    </CardText>
                 </CardBody>        
              </Card>    
-             <br />
-             <PrintErrorMsg isError={!!this.state.errorMessage} errorMsg={this.state.errorMessage}/> 
-             </>        
+            </>        
         )
     }
 }

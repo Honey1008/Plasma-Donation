@@ -142,7 +142,7 @@ class AboutUs extends Component {
                         <p>
                        <i>Plasma Genesis</i>  (Plasma Donation using Blockchain) is a DApp – Decentralized 
                        Application that works for ease of availability and ensures the origin of Plasma.
-                       where the entities can be trusted and rewarded for their good work and can be penalized if 
+                       The entities can be trusted and rewarded for their good work and can be penalized if 
                        proved to be malicious.
                        <br />
                        <br />
@@ -204,7 +204,8 @@ class AboutUs extends Component {
                 <div className="row">
                     <div className="col-12">
                         <p>
-                            Plasma donation can be done in two ways as given below
+                        Plasma may be collected as a part of the whole blood donation process 
+                        or by plasmapheresis where cellular constituents of blood are returned to the donor. 
                         </p>
                         <ol>
                             <li style={{textDecoration: 'underline', fontWeight:'bold'}}> Whole Blood Donation</li>

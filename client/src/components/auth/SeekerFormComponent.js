@@ -216,7 +216,7 @@ class SeekerForm extends Component{
                         </FormGroup>
     
                         <FormGroup>
-                            <Label htmlFor="seekerHospital">Address</Label>
+                            <Label htmlFor="seekerHospital">Ethereum Account of Address</Label>
                             <Input type="text" name="seekerHospital" id="seekerHospital" 
                             placeholder="Enter the ethereum address of the hospital that you are currently being treated."
                             onChange={this.handleChange}/>

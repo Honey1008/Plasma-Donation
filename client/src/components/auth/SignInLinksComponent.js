@@ -27,7 +27,7 @@ function SignInLinks(props){
                 </NavItem>
 
                 <NavItem>
-                    <NavLink className="nav-link" to="/home" onClick={props.signOut}>
+                    <NavLink className="nav-link" to="/login" onClick={props.signOut}>
                        <strong> LogOut </strong>
                     </NavLink>
                 </NavItem>

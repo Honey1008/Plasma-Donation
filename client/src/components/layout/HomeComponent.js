@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Jumbotron} from 'reactstrap';
+import {Jumbotron, CardDeck, Card, CardBody, CardTitle, CardSubtitle} from 'reactstrap';
 import PlasmaDonation from '../../contracts/PlasmaDonation';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
 import '../../styles/HomeComponent.css';
 import Circle from './CircleComponent';
 import {Link} from 'react-router-dom';
+
 
 class Home extends Component { 
 
@@ -30,15 +31,18 @@ class Home extends Component {
             plasmaManager = res;
         });
 
-        const entities = await instance.methods.viewTotalEntities().call();
-       
+        const seekers = await instance.methods.totalSeekers().call();
+        const donors = await instance.methods.totalDonors().call();
+        const hospitals = await instance.methods.totalHospitals().call();
+        const transfusions = await instance.methods.totalTransfusions().call();
+
         this.setState({
             plasmaManager,
             contractAddress : deployedNetwork.address,
-            totalSeekers :entities[0],
-            totalDonors : entities[1],
-            totalHospitals : entities[2],
-            totalTransfusions : entities[3]
+            totalSeekers : seekers,
+            totalDonors : donors,
+            totalHospitals : hospitals,
+            totalTransfusions : transfusions
         })
     }
    
@@ -82,33 +86,28 @@ class Home extends Component {
                     </div>
                 </div>
                     
-                    {/* <div className="row">
-                    <div className="col-12">
-                        <p style={{fontSize:'18px'}}>The Plasma Manager of this contract is &nbsp;
-                            <Link className="link-content" to="/myprofile">
-                                {this.state.plasmaManager}
-                            </Link>
-                        
-                            <br />While, the contract is deployed to {this.state.contractAddress} address.
-                        </p>                 
-                   </div>
-                 </div> */}
-                    <br />
                 <div className="row">
-                    <div className="col-7">
-                        <br />
-                        <br />
-                         <img src="/assets/images/covid19.jpg" alt=""/>
+                    <div className="col-8 offset-2" >           
+                    <br />
+                    <img src="/assets/images/covid19.jpg" alt="" 
+                    style={{border: '1px solid #f1f1f1', padding: '40px 20px'}}/>
+                    
+                        
                     </div>
-                    <div className="col-5 col-md-5 col-sm-12">
+                </div>          
+                <br />  
+                <div className="row">
+                <div className="col-12">
                         <p style={{fontSize: '18px'}}>
+                            Convalescent plasma is collected from someone who has 
+                            recovered from a virus. 
                             Convalescent plasma therapy was the only means of rehabilitation initially
                             when there was no vaccine for COVID-19.
-                            Convalescent plasma is collected from someone who has 
-                            recovered from a virus. When a person is infected with a virus, 
+                            When a person is infected with a virus, 
                             their body starts making antibodies to fight it. It is believed 
                             these antibodies could be the key ingredient for a treatment to help
                             others with the same virus.
+
                         </p>
                         <p style={{fontSize: '18px'}}>
                             Your donated plasma touches the lives and families of thousands of 
@@ -116,10 +115,8 @@ class Home extends Component {
                             The plasma we collect goes to patients who need transfusions.
                         </p>
                     </div>    
-                </div>
-                <br/>  
-                <br />              
-               
+                </div>            
+               <br />
                 <div className="row">
                     <div className="col-12">
                     <h4 style={{fontFamily: 'serif',textAlign:'center'}}>
@@ -133,6 +130,46 @@ class Home extends Component {
             totalSeekers = {this.state.totalSeekers}
             totalDonors = {this.state.totalDonors}
             totalTransfusions = {this.state.totalTransfusions}/>
+
+            <div className="row">
+                    <div className="col-12">
+                        <CardDeck>
+                            <Card style={{marginTop: '20px'}} className="card">
+                                <CardBody style={{fontFamily: 'serif'}}>
+                                <CardTitle tag="h5" style={{fontSize: '25px'}}>
+                                    <blockquote>
+                                    &nbsp;Giving is not just about making a donation. It is about 
+                                    making a difference.&nbsp;
+                                    </blockquote>
+                                </CardTitle>
+                              <br />
+                                <CardSubtitle tag="h6" className="mb-2 text-muted" 
+                                    style={{float: 'right', fontSize:'18px'}}>
+                                   - Kathy Calvin, former President and CEO of UN  
+                                </CardSubtitle>
+                                </CardBody>
+                            </Card>
+                        </CardDeck>
+                    </div>
+                </div>
+
+                {/* <div className="row">
+                    <div className="col-12">
+                        <p style={{fontSize:'18px'}}>
+                        <img src="assets/images/manager.png" alt="" width="25px" height="25px"/> {' '}
+                                     &nbsp;&nbsp;
+                                     Plasma Manager of this contract is &nbsp;
+                            <Link className="link-content" to="/myprofile">
+                                {this.state.plasmaManager}
+                            </Link>
+                            <br />
+                            <br />
+                            <img src="assets/images/contract.png" alt="" width="25px" height="25px"/> {' '}
+                                     &nbsp;&nbsp;
+                                     Contract is deployed at {this.state.contractAddress}
+                        </p>                 
+                   </div>
+                 </div> */}
         </div> 
 
         </> 

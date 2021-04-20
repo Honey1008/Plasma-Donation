@@ -23,6 +23,15 @@ import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 import TempProgressBar from './TempProgressBar';
 
+const wrap={
+  position: 'relative',
+  minHeight: '100vh'
+}
+const contentWrap = {
+  paddingBottom: '340px'
+}
+
+
 const mapDispatchToProps = (dispatch) => ({
   resetFeedbackForm: () => {dispatch(actions.reset('feedback'))}
 });
@@ -74,28 +83,32 @@ class Main extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div>
-      <Header />      
-      <Switch>
-        <Route path="/home" component={() => <Home />} />
-        <Route path="/hospitals" component={HospitalPool} />
-        <Route exact path="/seekers" component={SeekerPool} />
-        <Route path="/seekers/:id" component={SeekerProfile} />
-        <Route exact path ="/donors" component={DonorPool} />
-        <Route path="/donors/:id" component={DonorProfile} />
-        <Route path="/transfusions" component={TransfusionPool}/>
-        <Route exact path="/contactus" component={() => 
-        <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
-        <Route path ="/hospitalform" component={HospitalForm} />
-        <Route path="/seekerform" component={SeekerForm} />
-        <Route path="/donorform" component={DonorForm} />
-        <Route path ="/login" component={LoginPage} />
-        <Route path="/myprofile" component={PlasmaManagerDashboard} />
-        <Route path="/temp" component={TempProgressBar} />
-        <Route path="/aboutus" component={AboutUs} />
-        <Redirect to="/home" />
-      </Switch>  
+      <div style={wrap}>
+        <div style={contentWrap}>
+        <Header />      
+          <Switch>
+            <Route path="/home" component={() => <Home />} />
+            <Route path="/hospitals" component={HospitalPool} />
+            <Route exact path="/seekers" component={SeekerPool} />
+            <Route path="/seekers/:id" component={SeekerProfile} />
+            <Route exact path ="/donors" component={DonorPool} />
+            <Route path="/donors/:id" component={DonorProfile} />
+            <Route path="/transfusions" component={TransfusionPool}/>
+            <Route exact path="/contactus" component={() => 
+            <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+            <Route path ="/hospitalform" component={HospitalForm} />
+            <Route path="/seekerform" component={SeekerForm} />
+            <Route path="/donorform" component={DonorForm} />
+            <Route path ="/login" component={LoginPage} />
+            <Route path="/myprofile" component={PlasmaManagerDashboard} />
+            <Route path="/temp" component={TempProgressBar} />
+            <Route path="/aboutus" component={AboutUs} />
+            <Redirect to="/home" />
+          </Switch>  
       <Footer />
+
+        </div>
+      
       <FollowUs/>
       </div>
     );

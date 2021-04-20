@@ -46,7 +46,7 @@ class TransfusionPool extends Component{
         this.toggleModal();
         event.preventDefault();
         const date = new Date();
-        const dateOfDonation = date.DatetoString();
+        const dateOfDonation = date.toString();
         const accounts = await web3.eth.getAccounts();
         await instance.methods
         .Donation(this.state.ethDonor,dateOfDonation)

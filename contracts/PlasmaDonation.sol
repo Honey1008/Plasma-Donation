@@ -2,10 +2,9 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract PlasmaDonation {
-    //Array of addresses that can used to retrieve the entities using map functionality in the frontend.
-    address[] public totalSeekers; //array of addresses that keeps the track of total seekers in the system.
-    address[] public totalDonors; // array of addresses that keeps the track of total Donors in the system.
-    address[] public totalHospitals; //array of addresses that keeps track of total Hospitals in the system.
+    uint256 public totalSeekers = 0; //state variable that keeps the track of total seekers in the system.
+    uint256 public totalDonors = 0; //state variable that keeps the track of total Donors in the system.
+    uint256 public totalHospitals = 0; //state variable that keeps track of total Hospitals in the system.
 
     //state variable that stores address of creator of contract with access of admin level.
     address public plasmaManager;
@@ -30,9 +29,8 @@ contract PlasmaDonation {
         bool exist;
     }
 
-    //mappings that store data of Seeker and the index at which the donor is stored respectively.
+    //mappings that store data of Seeker.
     mapping(address => Seeker) public seekers;
-    mapping(address => uint256) public indexOfSeeker;
 
     //structure to create a new datatype Donor.
     struct Donor {
@@ -43,9 +41,8 @@ contract PlasmaDonation {
         bool exist;
     }
 
-    //mappings that store data of Donor and the index at which the donor is stored respectively.
+    //mappings that store data of Donor.
     mapping(address => Donor) public donors;
-    mapping(address => uint256) public indexOfDonor;
 
     //structure to create a new datatype Hospital.
     struct Hospital {
@@ -54,10 +51,8 @@ contract PlasmaDonation {
         string hashOfHospitalsData;
         bool exist;
     }
-
-    //mappings that store data of Hospital and the index at which the donor is stored respectively.
+    //mappings that store data of Hospital.
     mapping(address => Hospital) public hospitals;
-    mapping(address => uint256) public indexOfHospital;
 
     //structure to create a new datatype TransfusionState
     struct TransfusionState {
@@ -110,7 +105,7 @@ contract PlasmaDonation {
         _;
     }
 
-    //The constructor assigns the deployer of contract's address to plasmaManager.
+    //The constructor assigns the deployer of contract as plasmaManager.
     constructor() {
         plasmaManager = msg.sender;
     }
@@ -119,6 +114,7 @@ contract PlasmaDonation {
     function validateSeeker(address _ethSeeker)
         public
         checkSeekerExist(_ethSeeker)
+        checkHospitalExist(msg.sender)
     {
         require(
             msg.sender == seekers[_ethSeeker].associatedHospital,
@@ -147,9 +143,7 @@ contract PlasmaDonation {
         seeker.associatedHospital = _associatedHospital;
         seeker.exist = true; //Indicates that the seeker is now a part of the network.
         seeker.isSeekerEligible = false;
-
-        totalSeekers.push(msg.sender); //Adding seeker's address.
-        indexOfSeeker[msg.sender] = totalSeekers.length; //store the index on which seeker is added.
+        totalSeekers++;
     }
 
     // Donor is added to the network.
@@ -164,9 +158,7 @@ contract PlasmaDonation {
         donor.hashOfDonorsData = _hashOfDonorsData;
         donor.exist = true; //Indicates that the donor is now a part of the network.
         donor.isDonorEligible = false;
-
-        totalDonors.push(msg.sender); //Adding donors address.
-        indexOfDonor[msg.sender] = totalDonors.length; //store the index on which donor is added.
+        totalDonors++;
     }
 
     // Hospital is added to the network.
@@ -186,9 +178,7 @@ contract PlasmaDonation {
         hospital.hospitalName = _hospitalName;
         hospital.hashOfHospitalsData = _hashOfHospitalsData;
         hospital.exist = true; //Indicates that the hospital is now a part of the network.
-
-        totalHospitals.push(_ethHospital); //After adding hospital to the network increments the statevariable to keep track of total Hospitals in the system.
-        indexOfHospital[_ethHospital] = totalHospitals.length;
+        totalHospitals++;
     }
 
     //removes the seeker if S/he turns out to be malicious. This operation can only be performed by the hospital.
@@ -202,16 +192,7 @@ contract PlasmaDonation {
             "You do not have the authority to perform this operation."
         );
         delete seekers[_ethSeeker]; // deletes the information of seeker from mappings seeker.
-        uint256 index = indexOfSeeker[_ethSeeker] - 1; // get the index on which the seeker with the address _ethSeeker is stored.
-        if (index == totalSeekers.length - 1) {
-            totalSeekers.pop(); // if the seeker is present at the last index just perform pop operation.
-        } else {
-            delete totalSeekers[index]; //deleting that address from array totolSeekers.
-            totalSeekers[index] = totalSeekers[totalSeekers.length - 1]; //copying the last element to the deleted element index.
-            totalSeekers.pop(); // pop the redundant last element.
-            indexOfSeeker[totalSeekers[index]] = index + 1; //set the index value of the last element in mapping.
-        }
-        delete indexOfSeeker[_ethSeeker]; //deleting the seeker from the mapping.
+        totalSeekers--;
     }
 
     //removes the donor if S/he turns out to be malicious. This operation can only be performed by any Hospital.
@@ -221,16 +202,7 @@ contract PlasmaDonation {
         checkHospitalExist(msg.sender)
     {
         delete donors[_ethDonor];
-        uint256 index = indexOfDonor[_ethDonor] - 1; //get the index on which the donor with the address _ethDonor is stored.
-        if (index == totalDonors.length - 1) {
-            totalDonors.pop();
-        } else {
-            delete totalDonors[index]; //deleting that address from array totalDonors.
-            totalDonors[index] = totalDonors[totalDonors.length - 1]; //copying the last element to the deleted element's index.
-            totalDonors.pop(); // removing the last element.
-            indexOfDonor[totalDonors[index]] = index + 1; //updating the index value of that last element.
-        }
-        delete indexOfDonor[_ethDonor]; //deleting the donor from the mapping.
+        totalDonors--;
     }
 
     //removes the hospital if it turns out to be malicious. This operation can only be performed by Manager.
@@ -240,22 +212,12 @@ contract PlasmaDonation {
         checkHospitalExist(_ethHospital)
     {
         delete hospitals[_ethHospital];
-        uint256 index = indexOfHospital[_ethHospital] - 1; //get the index on which the hospital with address _ethHospital is stored.
-        if (index == totalHospitals.length - 1) {
-            totalHospitals.pop();
-        } else {
-            delete totalHospitals[index]; //deleting that address from array totalHospitals.
-            totalHospitals[index] = totalHospitals[totalHospitals.length - 1]; //copying the last eelement to the deleted element's index.
-            totalHospitals.pop(); //poping the last redundant element.
-            indexOfHospital[totalHospitals[index]] = index + 1; //setting the index of the last element
-        }
-        delete indexOfHospital[_ethHospital]; //deleting the hospital from the mapping.
+        totalHospitals--;
     }
 
     //Hospital validates the Donor before collecting Plasma.
     function validateDonor(address _ethDonor)
         public
-        checkHospitalExist(msg.sender)
         checkDonorExist(_ethDonor)
     {
         require(
@@ -287,8 +249,9 @@ contract PlasmaDonation {
 
         TransfusionState memory newTransfusion =
             TransfusionState({
-                indexOfTransfusion: transfusions.length, //As the plasma is not transfused yet, initializing seekers address.
-                ethSeeker: 0x0000000000000000000000000000000000000000,
+                indexOfTransfusion: transfusions.length,
+                ethSeeker: //As the plasma is not transfused yet, initializing seekers address.
+                0x0000000000000000000000000000000000000000,
                 ethDonor: _ethDonor,
                 ethHospital: msg.sender,
                 stateOfTransfusion: status.requestInitiated,
@@ -310,7 +273,7 @@ contract PlasmaDonation {
         );
         require(
             transfusions[index].ethHospital == msg.sender,
-            "Only the associated hospital has the authority to modify the state of tranfusion"
+            "Only the associated hospital has the authority to modify the state of transfusion"
         );
 
         transfusions[index].stateOfTransfusion = status.requestAdded;
@@ -318,7 +281,7 @@ contract PlasmaDonation {
     }
 
     //Associating the patient that is transfused with the donor's Plasma.
-    function Tranfusion(
+    function Transfusion(
         uint256 index,
         address _ethSeeker,
         string memory _updatedOn,
@@ -343,7 +306,7 @@ contract PlasmaDonation {
         transfusions[index].storageTime = _storageTime;
     }
 
-    //The Tranfusion completed successfully.
+    //The Transfusion completed successfully.
     function Complete(uint256 index, string memory _updatedOn)
         public
         checkSeekerExist(transfusions[index].ethSeeker)
@@ -365,49 +328,8 @@ contract PlasmaDonation {
         totalCompletedTransfusions++;
     }
 
-    function viewTotalEntities()
-        public
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256
-        )
-    {
-        return (
-            totalSeekers.length,
-            totalDonors.length,
-            totalHospitals.length,
-            transfusions.length
-        );
-    }
-
+    //returns total existing transfusions in the system.
     function totalTransfusions() public view returns (uint256) {
         return transfusions.length;
-    }
-
-    function getTransfusion(uint256 index)
-        public
-        view
-        returns (
-            uint256,
-            address,
-            address,
-            address, 
-            uint256,
-            string memory,
-            string memory
-        )
-    {
-        return (
-            transfusions[index].indexOfTransfusion,
-            transfusions[index].ethSeeker,
-            transfusions[index].ethDonor,
-            transfusions[index].ethHospital,
-            uint256(transfusions[index].stateOfTransfusion),
-            transfusions[index].storageTime,
-            transfusions[index].updatedOn
-        );
     }
 }
