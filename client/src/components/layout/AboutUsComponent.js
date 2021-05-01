@@ -125,7 +125,7 @@ class AboutUs extends Component {
                         A group of fourth year students, working on our final year project 
                         under the guidance of <b><i>Prof. J. S. Dhobi</i></b>. 
                         Inspiration for this project was the convalescent plasma therapy
-                        that was used in early 2020's for treatment of COVID-19.                     
+                        that was used in for the treatment of COVID-19.                     
                         </p>
                     </div>
                 </div>
@@ -157,7 +157,8 @@ class AboutUs extends Component {
                         for it is rapidly spreading across the globe, 
                         the discovery of a vaccine is the only escape from the pandemic. 
                         Hopefully, today the vaccine is available and many people have been vaccinated.
-                        But still the second variant of this virus is creating a havoc.  
+                        But still the second variant of this virus is creating a havoc and plasma donation still plays an emminent role in fighting 
+                        against this dredful disease.  
                         </p>    
                     </div>
                 </div>
@@ -172,10 +173,10 @@ class AboutUs extends Component {
                 <div className="row">
                     <div className="col-6">
                         <p style={{paddingTop: '30px'}}>
-                           Plasma is the clear, straw-colored liquid portion of blood that remains after red blood cells, white blood cells, platelets and other cellular components are removed. 
+                        Plasma is the clear, straw-colored liquid portion of blood that remains after red blood cells, white blood cells, platelets and other cellular components are removed. 
                         </p> 
                         <p>
-                            It is the single largest component of human blood, comprising about 55 percent, and contains water, salts, enzymes, antibodies and other proteins.
+                        It is the single largest component of human blood, comprising about 55 percent, and contains water, salts, enzymes, antibodies and other proteins.
                         </p>
                         <p>
                         Plasma carries out a variety of functions in the body, including clotting blood, fighting diseases and other critical functions.    

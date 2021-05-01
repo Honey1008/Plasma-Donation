@@ -56,11 +56,12 @@ const DonorProfile = (props) => {
                                 {/* <img src="/assets/images/location.png" alt="" width="15px" height="15px"/> {' '} */}
                                 {donor.donorAddress}, {donor.donorCity}, {donor.donorState}, {donor.donorCountry}.
                             </ListGroupItem> 
+                            {donor.donorHospital? 
                             <ListGroupItem className="border-0">
                                 <b>Associated with Hospital : </b>
                                 {/* <img src="/assets/images/hospitalicon.png" alt="" width="20px" height="20px"/> */}
                                 &nbsp; {donor.donorHospital}
-                            </ListGroupItem> 
+                            </ListGroupItem> : null}
                         </ListGroup>
                     </div>
                </div>

@@ -3,41 +3,96 @@ import { Button, Media } from 'reactstrap';
 import { connect } from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import { compose } from 'redux';
+import { sha256 } from 'js-sha256';
 import '../../styles/HospitalPool.css';
+import instance from '../../contracts/instance';
+import web3 from '../../contracts/web3';
 
-class HospitalPool extends Component {
+function HospitalPool({hospitals}) {
+    return (
+        <div>
+             { hospitals ? hospitals.map(hospital => 
+                 <div key={hospital.id}>
+                 <RenderHospital hospital={hospital} />
+                 </div>
+             ) : null}
+        </div>
+    );
+    
+}
+
+class RenderHospital extends Component {
 
     state = {
-        errorMsg : ""
+        errorMsg : "",
+        hospitalinBlockchain : undefined,
+        isHospitalDataSame : null,
+        showImage : 'none'
     }
 
-    verifyHospital(hospital){
-        console.log("Called Sucessfully!");
+    verifyHospital= async(hospital) => {
+
+        const dataString = hospital.hospitalName+ hospital.hospitalEmail
+                        +hospital.hospitalContact+hospital.hospitalAddress
+                        +hospital.hospitalCity+hospital.hospitalState
+                        +hospital.hospitalCountry;
+
+        dataString.replace(/\s+/g, '');
+        const hashOfHospitalData = sha256(dataString);
+
+        const accounts = await web3.eth.getAccounts();
+
+        this.setState({
+            hospitalinBlockchain : await instance.methods.hospitals(hospital.ethHospital).call()
+        });
+
+        const hashfromBlockchain = this.state.hospitalinBlockchain.hashOfHospitalsData;
+       
+        this.setState({
+            isHospitalDataSame : hashOfHospitalData === hashfromBlockchain
+        });
+
+        if(this.state.isHospitalDataSame === true){
+            this.setState({
+                showImage : 'check'
+            })
+        } else if(this.state.isHospitalDataSame === false){
+            this.setState({
+                showImage : 'cross'
+            })
+        }
+        
     }
 
      render(){
-        const { hospitals } = this.props;    
+         const {hospital} = this.props;
+           
         return(
             <div>
-                { hospitals ? hospitals.map(hospital => {
-                return(
-                    <Media list>
-                    <div key={hospital.id} >
-                         <Media tag="li"  className="media-list">
-                                <Media left middle>
-                                    <Media object height="200px" width="200px" src= "assets/images/hospital.png" alt={hospital.name} />
-                                    <br />
-                                    <br />
-                                    <Button style={{backgroundColor:'white',color:'black',border:'none'}}
-                                        onClick={() => this.verifyHospital(hospital)}>
-                                    <a>Verify Hospital Credentials </a> 
-                                    </Button>
-                                    
+                <Media list>
+                 <div key={hospital.id} >
+                    <Media tag="li"  className="media-list">
+                        <Media left middle>
+                            <Media object height="200px" width="200px" src= "assets/images/hospital.png" alt={hospital.name} />
+                             <br />
+                             <br />
+                             {this.state.showImage === 'check' || this.state.showImage === 'cross' 
+                             ? null : 
+                             <Button className="btn-click" style={{padding: '10px 30px'}}
+                             onClick={() => this.verifyHospital(hospital)}>
+                             Verify Hospital Data
+                             </Button>}
                                 </Media>
                             
                             <Media body className=" offset-1 body-content">
                                 <Media heading>
-                                <span><i>{hospital.hospitalName}</i></span> 
+                                   <span><i>{hospital.hospitalName}</i></span> 
+                                {this.state.showImage === 'check'? 
+                                 <img src="assets/images/verified.jpg" alt="" 
+                                 width="50px" height="45px"/>
+                                : this.state.showImage === 'cross' ? <span> {' '}
+                                <img src="assets/images/cross.jpg" alt="" 
+                                width="35px" height="35px"/> </span>: null}
                                 </Media>
                                 <hr />
                                 <p><img src="assets/images/Ethereum.png" alt="" width="25px" height="25px"/>  {hospital.ethHospital}</p> 
@@ -48,10 +103,7 @@ class HospitalPool extends Component {
                             </Media>
                           </Media>  
                     </div>
-                    </Media>             
-                )}):
-                null
-            }                            
+                    </Media>                                
             </div>
         );
     }

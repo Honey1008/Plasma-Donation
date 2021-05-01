@@ -86,8 +86,8 @@ class TransfusionPool extends Component{
                     </div>
                 </div>
                 <div className="row">
-                   
-                    {this.state.transfusions? 
+                
+                    {this.state.transfusions ? 
                     this.state.transfusions.map((transfusion,index) => 
                         <div className="col-12 col-md-12 offset-md-1 m-3" key={index}>
                             <CardDeck>

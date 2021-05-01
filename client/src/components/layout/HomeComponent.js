@@ -43,7 +43,7 @@ class Home extends Component {
             totalDonors : donors,
             totalHospitals : hospitals,
             totalTransfusions : transfusions
-        })
+        });
     }
    
 
@@ -73,7 +73,7 @@ class Home extends Component {
                         <p style={{fontSize:'18px'}}>
                         Plasma often is referred to as the <quote><em>"Gift of Life" </em></quote>&nbsp;
                         <img src="/assets/images/life.png" width="30px" height="30px" alt="" /> &nbsp;                    
-                         because it is the essential starting material needed to manufacture therapies that 
+                         because it is an essential starting material needed to manufacture therapies that 
                          help thousands of people worldwide with rare, chronic diseases to live healthier, 
                          productive and fulfilling lives. 
                         </p>
@@ -90,7 +90,7 @@ class Home extends Component {
                     <div className="col-8 offset-2" >           
                     <br />
                     <img src="/assets/images/covid19.jpg" alt="" 
-                    style={{border: '1px solid #f1f1f1', padding: '40px 20px'}}/>
+                    style={{border: '1px solid #f1f1f1', padding: '40px 30px'}}/>
                     
                         
                     </div>
@@ -131,29 +131,8 @@ class Home extends Component {
             totalDonors = {this.state.totalDonors}
             totalTransfusions = {this.state.totalTransfusions}/>
 
+            <hr />
             <div className="row">
-                    <div className="col-12">
-                        <CardDeck>
-                            <Card style={{marginTop: '20px'}} className="card">
-                                <CardBody style={{fontFamily: 'serif'}}>
-                                <CardTitle tag="h5" style={{fontSize: '25px'}}>
-                                    <blockquote>
-                                    &nbsp;Giving is not just about making a donation. It is about 
-                                    making a difference.&nbsp;
-                                    </blockquote>
-                                </CardTitle>
-                              <br />
-                                <CardSubtitle tag="h6" className="mb-2 text-muted" 
-                                    style={{float: 'right', fontSize:'18px'}}>
-                                   - Kathy Calvin, former President and CEO of UN  
-                                </CardSubtitle>
-                                </CardBody>
-                            </Card>
-                        </CardDeck>
-                    </div>
-                </div>
-
-                {/* <div className="row">
                     <div className="col-12">
                         <p style={{fontSize:'18px'}}>
                         <img src="assets/images/manager.png" alt="" width="25px" height="25px"/> {' '}
@@ -169,7 +148,30 @@ class Home extends Component {
                                      Contract is deployed at {this.state.contractAddress}
                         </p>                 
                    </div>
-                 </div> */}
+                 </div>
+            <hr />
+
+            <div className="row">
+                    <div className="col-12">
+                        <CardDeck>
+                            <Card style={{marginTop: '20px'}} className="card">
+                                <CardBody style={{fontFamily: 'serif'}}>
+                                <CardTitle tag="h6" style={{fontSize: '24px'}}>
+                                    <blockquote>
+                                    &nbsp;Giving is not just about making a donation. It is about 
+                                    making a difference.&nbsp;
+                                    </blockquote>
+                                </CardTitle>
+                              <br />
+                                <CardSubtitle tag="h6" className="mb-2 text-muted" 
+                                    style={{float: 'right', fontSize:'18px'}}>
+                                   - Kathy Calvin, former President and CEO of UN  
+                                </CardSubtitle>
+                                </CardBody>
+                            </Card>
+                        </CardDeck>
+                    </div>
+                </div>
         </div> 
 
         </> 

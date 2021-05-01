@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardTitle, CardSubtitle, CardDeck, Button, CardText,Spinner } from 'reactstrap';
+import { Card, CardBody, CardTitle, CardText, CardDeck, Button, Spinner, CardSubtitle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -34,7 +34,22 @@ class RenderSeeker extends Component {
 
     state = {
         loading: false,
-        errorMessage : ''
+        validateLoading: false,
+        errorMessage : '',
+        seekerinBlockchain : undefined,
+        isSeekerEligible: false
+    }
+
+    componentDidMount = async() => {
+        const accounts = await web3.eth.getAccounts();
+        
+        this.setState({
+            seekerinBlockchain : await instance.methods.seekers(this.props.seeker.ethSeeker).call()
+        });
+        
+        this.setState({
+            isSeekerEligible : this.state.seekerinBlockchain.isSeekerEligible
+        });
     }
     
     handleViewProfile = (seeker) => {
@@ -47,7 +62,7 @@ class RenderSeeker extends Component {
 
     handleValidateSeeker = async(ethSeeker) => {
         // prevent.default(); 
-        this.setState({loading: true, errorMessage: ''});
+        this.setState({validateLoading: true, errorMessage: ''});
         try{
             const accounts = await web3.eth.getAccounts();
             
@@ -57,7 +72,7 @@ class RenderSeeker extends Component {
             this.setState({ errorMessage: err.message });
         }
            
-        this.setState({loading: false});   
+        this.setState({validateLoading: false});  
     }
     
     handleRemoveSeeker = async(seeker) => {
@@ -83,8 +98,18 @@ class RenderSeeker extends Component {
                            <img src="assets/images/search.png" alt="" width="20px" height="20px"/> {' '}
                              &nbsp;&nbsp;
                             {seeker.seekerFname+ " " + seeker.seekerLname}
+                            <small className="text-muted" style={{float: 'right'}}>
+                                    {
+                                        this.state.isSeekerEligible?
+                                        <i>Verfied by Hospital</i>: 
+                                        <i>Not yet verified by the Hospital</i>
+                                    }
+                            </small>
                         </CardTitle>
-                        <hr />
+                        <CardText>
+                               
+                        </CardText>                        
+                        <hr /> 
                         <CardSubtitle tag="h6" className="mb-2 text-muted">
                         <img src="assets/images/Ethereum.png" alt="" width="20px" height="20px"/> {' '}
                          &nbsp;&nbsp;
@@ -94,14 +119,16 @@ class RenderSeeker extends Component {
                           <div className="text-right">
                             <Button className="btn-click"
                                 onClick={()=>{this.handleRemoveSeeker(seeker)}}>
-                                {this.state.loading? <Spinner color="light"/> : <span>Remove</span>  } 
+                                {this.state.loading? <Spinner color="light" size="sm"/> : <span>Remove</span>  } 
                             </Button>
                             &nbsp;&nbsp;&nbsp; 
-                            <Button className="btn-click"
-                            onClick={()=>{this.handleValidateSeeker(seeker.ethSeeker)}}>
-                                Validate
-                            </Button>
-                            &nbsp;&nbsp;&nbsp; 
+                          { this.state.isSeekerEligible ? null
+                             :<span><Button className="btn-click"
+                                onClick={()=>{this.handleValidateSeeker(seeker.ethSeeker)}}>
+                                {this.state.validateLoading? <Spinner color="light" size="sm"/> : 
+                                <span>Validate</span>  } 
+                             </Button>&nbsp;&nbsp;&nbsp;</span>}
+                            
                              <Link to={`/seekers/${seeker.id}`}>
                             <Button className="btn-click" 
                             onClick={({seeker})=>{this.handleViewProfile({seeker})}}>

@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import { signIn } from '../../redux/actions/authAction';
 import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 
+
 class LoginPage extends Component {
+
     state = {
         email : '',
         password : ''
     }
+    
     handleChange = (event) => {
         this.setState({
             [event.target.id]: event.target.value
@@ -19,6 +22,7 @@ class LoginPage extends Component {
         event.preventDefault();
         this.props.signIn(this.state);
     }
+
    
     render() {
         const { authError } = this.props;
@@ -60,7 +64,7 @@ class LoginPage extends Component {
                         </FormGroup>
                         {authError? 
                          <PrintErrorMsg isError={!!authError} errorMsg={authError}/>:
-                         null}
+                      null}
                         
                     </Form>   
                 </div>  

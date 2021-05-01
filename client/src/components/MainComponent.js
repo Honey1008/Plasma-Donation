@@ -22,6 +22,7 @@ import { Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 import TempProgressBar from './TempProgressBar';
+import Qrcode from './pools/Qrcode';
 
 const wrap={
   position: 'relative',
@@ -103,6 +104,7 @@ class Main extends Component {
             <Route path="/myprofile" component={PlasmaManagerDashboard} />
             <Route path="/temp" component={TempProgressBar} />
             <Route path="/aboutus" component={AboutUs} />
+            <Route path="/qrcode" component={Qrcode} />
             <Redirect to="/home" />
           </Switch>  
       <Footer />

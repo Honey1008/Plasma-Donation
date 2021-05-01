@@ -224,7 +224,7 @@ class SeekerForm extends Component{
                        
                         <FormGroup row style={{justifyContent:"center"}}>
                             <Button type="submit" className="submit-form">
-                            {this.state.loading ? <Spinner color="light"/> : <strong>Register</strong>} 
+                            {this.state.loading ? <Spinner color="light" size="sm"/> : <strong>Register</strong>} 
                             </Button>
                         </FormGroup>
                     </Form>

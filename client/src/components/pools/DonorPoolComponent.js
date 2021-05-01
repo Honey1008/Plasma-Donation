@@ -35,8 +35,24 @@ class RenderDonor extends Component {
 
     state = {
         loading: false,
-        errorMessage : ''
+        validateLoading: false,
+        errorMessage : '',
+        donorinBlockchain : undefined,
+        isDonorEligible: false
     }
+    
+    componentDidMount = async() => {
+        const accounts = await web3.eth.getAccounts();
+        
+        this.setState({
+            donorinBlockchain : await instance.methods.donors(this.props.donor.ethDonor).call()
+        });
+        
+        this.setState({
+            isDonorEligible : this.state.donorinBlockchain.isDonorEligible
+        });
+    }
+
 
     handleViewProfile = () => {
         return(
@@ -47,9 +63,15 @@ class RenderDonor extends Component {
     }
 
     handleValidateDonor = async(ethDonor) => {
-        const accounts = await web3.eth.getAccounts();
-        await instance.methods.validateDonor(ethDonor)
-        .send({from : accounts[0], gas: '1000000'});
+        this.setState({validateLoading: true, errorMessage: ''});
+        try{
+            const accounts = await web3.eth.getAccounts();
+            await instance.methods.validateDonor(ethDonor)
+            .send({from : accounts[0], gas: '1000000'});
+        }catch(err){
+            this.setState({ errorMessage: err.message });
+        }
+        this.setState({validateLoading: false});  
     }
 
     handleRemoveDonor = async(donor) => {
@@ -74,7 +96,15 @@ class RenderDonor extends Component {
                      <CardTitle tag="h5">
                         <img src="assets/images/donors.png" alt="" width="25px" height="25px"/> {' '}
                         &nbsp;&nbsp;
-                        {donor.donorFname+ " " + donor.donorLname}</CardTitle>
+                        {donor.donorFname+ " " + donor.donorLname}
+                        <small className="text-muted" style={{float: 'right'}}>
+                            {
+                                this.state.isDonorEligible?
+                                <i>Verfied by Hospital</i>: 
+                                <i>Not yet verified</i>
+                            }
+                        </small>
+                        </CardTitle>
                         <hr />
                       <CardSubtitle tag="h6" className="mb-2 text-muted">
                         <img src="assets/images/Ethereum.png" alt="" width="20px" height="20px"/> {' '}
@@ -84,14 +114,14 @@ class RenderDonor extends Component {
                       <div className="text-right">
                        <Button className="btn-click"
                            onClick={()=>{this.handleRemoveDonor(donor)}}>
-                            {this.state.loading? <Spinner color="light"/> : <span>Remove</span>  }
+                            {this.state.loading? <Spinner color="light" size="sm"/> : <span>Remove</span>  }
                         </Button>
                           &nbsp;&nbsp;&nbsp; 
-                       <Button className="btn-click"
-                      onClick={()=>{this.handleValidateDonor(donor.ethDonor)}}>
-                            Validate
-                       </Button>
-                       &nbsp;&nbsp;&nbsp; 
+                       {this.state.isDonorEligible? null :<span><Button className="btn-click"
+                         onClick={()=>{this.handleValidateDonor(donor.ethDonor)}}>
+                            {this.state.validateLoading? <Spinner color="light" size="sm"/> : <span>Validate</span>  }
+                       </Button>&nbsp;&nbsp;&nbsp;</span>}
+                        
                      <Link to={`/donors/${donor.id}`}>
                     <Button className="btn-click" 
                     onClick={this.handleViewProfile}>
