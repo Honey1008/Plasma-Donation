@@ -19,7 +19,7 @@ class TransfusionPool extends Component{
         const totalTransfusions = await instance.methods.totalTransfusions().call();
 
         const transfusions = await Promise.all(
-            Array(totalTransfusions)
+            Array(parseInt(totalTransfusions))
             .fill().map((element,index) => {
              return instance.methods.transfusions(index).call();
         }));
@@ -86,15 +86,15 @@ class TransfusionPool extends Component{
                     </div>
                 </div>
                 <div className="row">
-                
                     {this.state.transfusions ? 
                     this.state.transfusions.map((transfusion,index) => 
                         <div className="col-12 col-md-12 offset-md-1 m-3" key={index}>
                             <CardDeck>
+                                
                                 <RenderTransfusion 
-                                key={index}
-                                id={index}
-                                transfusion={transfusion}
+                                    key={index}
+                                    id={index}
+                                    transfusion={transfusion}
                                 />
                             </CardDeck>                    
                         </div>

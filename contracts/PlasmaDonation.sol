@@ -273,7 +273,7 @@ contract PlasmaDonation {
         );
         require(
             transfusions[index].ethHospital == msg.sender,
-            "Only the associated hospital has the authority to modify the state of transfusion"
+            "Only the associated hospital has the authority to modify the state of tranfusion"
         );
 
         transfusions[index].stateOfTransfusion = status.requestAdded;
@@ -281,7 +281,7 @@ contract PlasmaDonation {
     }
 
     //Associating the patient that is transfused with the donor's Plasma.
-    function Transfusion(
+    function Tranfusion(
         uint256 index,
         address _ethSeeker,
         string memory _updatedOn,
@@ -306,7 +306,7 @@ contract PlasmaDonation {
         transfusions[index].storageTime = _storageTime;
     }
 
-    //The Transfusion completed successfully.
+    //The Tranfusion completed successfully.
     function Complete(uint256 index, string memory _updatedOn)
         public
         checkSeekerExist(transfusions[index].ethSeeker)

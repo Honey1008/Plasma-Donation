@@ -22,7 +22,7 @@ function SignInLinks(props){
                 <NavItem>
                     <NavLink className="nav-link" to="/myprofile">
                     <i className="fa fa-user-circle"></i>
-                       <strong> My Profile</strong>
+                       <strong> DashBoard</strong>
                     </NavLink>
                 </NavItem>
 

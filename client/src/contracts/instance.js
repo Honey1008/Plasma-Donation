@@ -424,7 +424,7 @@ const abi = [
         "type": "string"
       }
     ],
-    "name": "Transfusion",
+    "name": "Tranfusion",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -462,10 +462,9 @@ const abi = [
     "constant": true
   }
 ]
-
 const instance = new web3.eth.Contract(
     abi,
-    '0xCBE8211b0FB633D18256671D737802a4281437f4'
+    '0xF99093ae574f55af94A65A8A5E49D57Aa750Ea72'
 );
 
 export default instance;

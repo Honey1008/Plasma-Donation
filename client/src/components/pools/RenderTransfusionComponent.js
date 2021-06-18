@@ -2,21 +2,28 @@ import React, {Component} from 'react';
 import {Card,CardBody,CardTitle,CardText,
      Spinner,Button, CardSubtitle , Modal, ModalHeader, ModalBody,
     Form, FormGroup,Label,Input} from 'reactstrap'
+    import QRCode from 'qrcode.react';
 import PrintErrorMsg from '../layout/PrintErrorMsgComponent';
 import '../../styles/ProgressBar.css';
 import instance from '../../contracts/instance';
 import web3 from '../../contracts/web3';
-
+ 
 class RenderTransfusion extends Component {
-    state = {
-        loading: false,
-        errorMessage : '',
-        progressValue : '',
-        i : 0,
-        isModalOpen: false,
-        ethSeeker : ''
+    constructor(props){
+        super(props);
+        this.state = {
+            loading: false,
+            errorMessage : '',
+            progressValue : '',
+            i : 0,
+            isModalOpen: false,
+            ethSeeker : '',
+            isQrModalOpen: false,
+            qrloading : false,
+            transfusiondetails : ''
+        };
     }
-
+    
     componentDidMount = () => {
         const {transfusion} = this.props;
         var percent = 0;
@@ -27,29 +34,55 @@ class RenderTransfusion extends Component {
         increase = 50:
         (transfusion.stateOfTransfusion ==='2') ? increase = 75 : increase = 100
 
-        if (this.state.i == 0) {
+        if (this.state.i === 0) {
             this.setState({i : 1});
             var elem = document.getElementById("myBar");
        
-             var id = setInterval(frame, 20);
+             setInterval(frame, 20);
              var temp = percent
          
-             function frame() {
+            function frame() {
             if(percent<temp+increase) {
                  percent++;
                  elem.style.width = percent + "%";
                  elem.innerHTML = percent  + "%";
              }
-             }
+            }
          }
+
+         this.setState({
+            transfusiondetails : "Seeker: " + transfusion.ethSeeker + 
+            "\n Donor: " + transfusion.ethDonor +
+            "\n Hospital: " + transfusion.ethHospital +
+            "\n Storage Time: " + transfusion.storageTime +
+            "\n Last Updated On: " + transfusion.updatedOn
+         })         
 
          this.setState({i: 0})
     }
 
-   
+    downloadQR = () => {
+        const canvas = document.getElementById("qrcode");
+        const pngUrl = canvas
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
+        let downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = "Status.png";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    };
+
+    toggleQrModal = () => {
+        this.setState({
+          isQrModalOpen: !this.state.isQrModalOpen
+        });
+    }
+
     move = () => {
       
-    if (this.state.i == 0) {
+    if (this.state.i === 0) {
        this.setState({i : 1});
         var elem = document.getElementById("myBar");
         var parentelem = document.getElementById("myProgress");
@@ -57,7 +90,7 @@ class RenderTransfusion extends Component {
         var parentWidth = parentelem.offsetWidth;
         var percent = Math.round(100 * width / parentWidth);
       
-        var id = setInterval(frame, 20);
+        setInterval(frame, 20);
         var temp = percent
         
         function frame() {
@@ -96,13 +129,14 @@ class RenderTransfusion extends Component {
         const storageTime = Math.ceil(difference/(1000*3600*24)).toString();
         console.log(storageTime);
         await instance.methods
-        .Transfusion(this.props.transfusion.indexOfTransfusion,this.state.ethSeeker, 
+        .Tranfusion(this.props.transfusion.indexOfTransfusion,this.state.ethSeeker, 
             currentDate.toString(), storageTime.toString())
         .send({from: accounts[0]});
         this.move();}catch(err){
             this.setState({ errorMessage: err.message });
         }    
-        this.setState({loading: false});    
+        this.setState({loading: false}); 
+        // this.setState({status : 'Transfusion Request Added'});   
     }
 
     handleAddRequest = async(index) => {
@@ -118,7 +152,8 @@ class RenderTransfusion extends Component {
         catch(err){
             this.setState({ errorMessage: err.message });
         }
-        this.setState({loading: false}); 
+        this.setState({loading: false});
+        this.setState({status : 'Donation Completed'}); 
     }
 
     handleCompletion = async(index) => {
@@ -132,7 +167,8 @@ class RenderTransfusion extends Component {
         } catch(err){
             this.setState({ errorMessage: err.message });
         }
-        this.setState({loading: false});    
+        this.setState({loading: false});
+        this.setState({status: 'Transfusion Completed'});    
     }
 
     render() {
@@ -250,7 +286,31 @@ class RenderTransfusion extends Component {
                                     </Button>
                                 </Form>
                             </ModalBody>
-                         </Modal>                         
+                         </Modal>  &nbsp;&nbsp;
+                         <Button className="btn-click"
+                            onClick={this.toggleQrModal}>
+                                {this.state.qrloading? <Spinner color="light"/> : <span>Generate QRCode</span>  } 
+                        </Button>
+                       
+                        <Modal isOpen={this.state.isQrModalOpen} toggle={this.toggleQrModal}>
+                            <ModalHeader toggle={this.toggleQrModal}>
+                                 Transfusion Status
+                            </ModalHeader>
+                            <ModalBody>
+                                <span style={{padding: '20px 130px'}}>
+                                    <QRCode 
+                                        id="qrcode"
+                                        value= {this.state.transfusiondetails}
+                                        size={200}
+                                        level={'H'}
+                                    />
+                                </span>
+                                <br />
+                                 <br />
+                                <Button className="btn-click" onClick={this.downloadQR} 
+                                      style={{float: "right"}}> Download QR </Button>       
+                            </ModalBody>
+                        </Modal>                                        
                     </div> 
                     <CardText>
                         <small className="text-muted">Last updated on ~ {transfusion.updatedOn}</small>

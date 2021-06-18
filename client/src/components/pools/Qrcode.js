@@ -58,10 +58,7 @@ export default class Qrcode extends Component {
                                     <Button className="btn-click" onClick={this.downloadQR} 
                                     style={{float: "right"}}> Download QR </Button>       
                                 </ModalBody>
-                        </Modal>     
-
-
-                
+                        </Modal>                     
             </div>
         )
     }
